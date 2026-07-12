@@ -1,0 +1,599 @@
+/**
+ * @file        inventory.css
+ * @module      Inventory
+ * @purpose     Scoped CSS file for the Inventory Management module.
+ *              All classes are prefixed with `inv-` to avoid leaking styles globally.
+ *              Implements color schemes, hover states, transitions, grid modifications,
+ *              skeleton loading animations, and custom styling overrides.
+ * @dependencies None
+ * @exports     None (imported directly into Inventory page components)
+ */
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   1. GLOBAL & CONTAINER STYLES
+   ───────────────────────────────────────────────────────────────────────────── */
+.inv-page-container {
+  min-height: 100vh;
+  background-color: #f8f9fa;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   2. HEADER & BREADCRUMBS
+   ───────────────────────────────────────────────────────────────────────────── */
+.inv-header-wrapper {
+  margin-bottom: 1.5rem;
+}
+.inv-breadcrumb-nav {
+  font-size: 0.85rem;
+}
+.inv-breadcrumb-link {
+  color: #6c757d;
+  text-decoration: none;
+  cursor: pointer;
+  transition: color 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+}
+.inv-breadcrumb-link:hover {
+  color: #0d6efd;
+}
+.inv-crumb-separator {
+  color: #adb5bd;
+}
+.inv-breadcrumb-active {
+  color: #212529;
+  font-weight: 500;
+}
+.inv-header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-top: 0.5rem;
+}
+.inv-page-title {
+  font-size: 1.75rem;
+  font-weight: 800;
+  color: #1e293b;
+  letter-spacing: -0.025em;
+  margin-bottom: 0.25rem;
+}
+.inv-page-subtitle {
+  color: #64748b;
+  font-size: 0.95rem;
+}
+.inv-header-divider {
+  border-top: 1px solid #e2e8f0;
+  margin: 1.25rem 0;
+  opacity: 1;
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   3. STAT CARDS LAYOUT (GRID MODIFICATION)
+   ───────────────────────────────────────────────────────────────────────────── */
+/* Custom column rules to arrange exactly 5 cards evenly across the screen on desktop */
+@media (min-width: 992px) {
+  .col-lg-2-4 {
+    flex: 0 0 auto;
+    width: 20%;
+  }
+}
+
+.inv-stat-card {
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 1.25rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+  border: 1px solid #f1f5f9;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow: hidden;
+}
+.inv-stat-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.02);
+}
+
+/* Icon bubble configuration inside stats */
+.inv-stat-icon-wrap {
+  width: 42px;
+  height: 42px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 0.75rem;
+}
+.inv-stat-value {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #0f172a;
+  line-height: 1.2;
+  margin-bottom: 0.25rem;
+}
+.inv-stat-label {
+  font-size: 0.825rem;
+  font-weight: 600;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* Color thematic styles for stats */
+.inv-stat-blue .inv-stat-icon-wrap { background: #eff6ff; color: #3b82f6; }
+.inv-stat-blue { border-left: 4px solid #3b82f6; }
+
+.inv-stat-indigo .inv-stat-icon-wrap { background: #eef2ff; color: #6366f1; }
+.inv-stat-indigo { border-left: 4px solid #6366f1; }
+
+.inv-stat-orange .inv-stat-icon-wrap { background: #fff7ed; color: #f97316; }
+.inv-stat-orange { border-left: 4px solid #f97316; }
+
+.inv-stat-yellow .inv-stat-icon-wrap { background: #fefce8; color: #eab308; }
+.inv-stat-yellow { border-left: 4px solid #eab308; }
+
+.inv-stat-red .inv-stat-icon-wrap { background: #fef2f2; color: #ef4444; }
+.inv-stat-red { border-left: 4px solid #ef4444; }
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   4. LOADING SKELETON ANIMATIONS
+   ───────────────────────────────────────────────────────────────────────────── */
+@keyframes inv-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: .4; }
+}
+
+.inv-stat-skeleton {
+  animation: inv-pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+.inv-skeleton-icon {
+  width: 42px;
+  height: 42px;
+  background-color: #e2e8f0;
+  border-radius: 8px;
+  margin-bottom: 0.75rem;
+}
+.inv-skeleton-value {
+  width: 60px;
+  height: 24px;
+  background-color: #e2e8f0;
+  border-radius: 4px;
+  margin-bottom: 0.5rem;
+}
+.inv-skeleton-label {
+  width: 90px;
+  height: 14px;
+  background-color: #e2e8f0;
+  border-radius: 4px;
+}
+
+/* Form skeletal field placeholder */
+.inv-skeleton-field {
+  height: 38px;
+  background-color: #e2e8f0;
+  border-radius: 6px;
+  animation: inv-pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  margin-bottom: 1rem;
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   5. BUTTONS & UI ACTIONS
+   ───────────────────────────────────────────────────────────────────────────── */
+.inv-btn-primary {
+  background-color: #0f172a;
+  border-color: #0f172a;
+  color: #ffffff;
+  font-weight: 500;
+  transition: background-color 0.2s, border-color 0.2s;
+}
+.inv-btn-primary:hover, 
+.inv-btn-primary:focus {
+  background-color: #1e293b;
+  border-color: #1e293b;
+  color: #ffffff;
+}
+.inv-btn-secondary {
+  background-color: #ffffff;
+  border-color: #cbd5e1;
+  color: #334155;
+  font-weight: 500;
+  transition: all 0.2s;
+}
+.inv-btn-secondary:hover {
+  background-color: #f8f9fa;
+  border-color: #94a3b8;
+  color: #1e293b;
+}
+.inv-btn-clear {
+  border: none;
+  background: transparent;
+  color: #94a3b8;
+  padding: 0.375rem 0.75rem;
+  transition: color 0.2s;
+}
+.inv-btn-clear:hover {
+  color: #64748b;
+}
+.inv-clear-link {
+  font-size: 0.85rem;
+  color: #3b82f6;
+  text-decoration: none;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+}
+.inv-clear-link:hover {
+  text-decoration: underline;
+  color: #2563eb;
+}
+.inv-btn-retry {
+  background-color: rgba(239, 68, 68, 0.1);
+  color: #ef4444;
+  border: 1px solid rgba(239, 68, 68, 0.2);
+}
+.inv-btn-retry:hover {
+  background-color: #ef4444;
+  color: #ffffff;
+}
+.inv-btn-pagination {
+  background-color: #ffffff;
+  border: 1px solid #e2e8f0;
+  color: #475569;
+  font-weight: 500;
+  transition: all 0.2s;
+}
+.inv-btn-pagination:hover:not(:disabled) {
+  background-color: #f1f5f9;
+  border-color: #cbd5e1;
+  color: #0f172a;
+}
+.inv-btn-pagination:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   6. SEARCH BAR TOOLBAR
+   ───────────────────────────────────────────────────────────────────────────── */
+.inv-search-bar-wrapper {
+  background: #ffffff;
+  padding: 1rem;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05);
+}
+.inv-input-group {
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  overflow: hidden;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+.inv-input-group:focus-within {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+}
+.inv-input-addon {
+  background: #f8f9fa;
+  border: none;
+  color: #64748b;
+  padding-right: 0.5rem;
+}
+.inv-select, 
+.inv-search-input {
+  border: none !important;
+  box-shadow: none !important;
+  font-size: 0.925rem;
+}
+.inv-select {
+  cursor: pointer;
+  font-weight: 500;
+  color: #334155;
+  background-color: #f8f9fa;
+}
+.inv-search-result-summary {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  font-size: 0.85rem;
+}
+.inv-result-pill {
+  background-color: #f1f5f9;
+  color: #475569;
+  padding: 0.25rem 0.75rem;
+  border-radius: 100px;
+  font-weight: 500;
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   7. RESPONSIVE TABLE & ROW ACTION BUTTONS
+   ───────────────────────────────────────────────────────────────────────────── */
+.inv-table-container {
+  border: 1px solid #e2e8f0;
+  background: #ffffff;
+}
+.inv-table-container table thead {
+  background-color: #f8f9fa;
+  font-weight: 700;
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  letter-spacing: 0.05em;
+}
+.inv-table-container table th {
+  border-bottom: 2px solid #e2e8f0;
+  padding: 1rem 0.75rem;
+}
+.inv-table-container table td {
+  padding: 1rem 0.75rem;
+  border-bottom: 1px solid #f1f5f9;
+}
+.inv-table-row {
+  transition: background-color 0.15s ease;
+}
+.inv-table-row:hover {
+  background-color: #f8fafc !important;
+}
+
+/* Sortable column header styling */
+.inv-sortable-header {
+  user-select: none;
+  transition: color 0.15s;
+}
+.inv-sortable-header:hover {
+  color: #0f172a !important;
+}
+.inv-sort-icon-wrap {
+  display: inline-flex;
+  vertical-align: middle;
+}
+
+/* Cell-specific limits */
+.inv-cell-name {
+  max-width: 200px;
+  white-space: normal;
+  word-break: break-word;
+}
+.inv-cell-generic {
+  max-width: 180px;
+  white-space: normal;
+  word-break: break-word;
+}
+.inv-cell-batch {
+  color: #0f172a;
+}
+
+/* Status badges */
+.inv-status-badge {
+  font-weight: 600;
+  padding: 0.35em 0.7em;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  letter-spacing: 0.01em;
+}
+.inv-alert-badge {
+  font-size: 0.7rem;
+  padding: 0.2em 0.4em;
+  border-radius: 4px;
+}
+
+/* Row action icon wrappers */
+.inv-btn-icon {
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  border: 1px solid transparent;
+  transition: all 0.15s;
+}
+.inv-btn-view {
+  background-color: #f1f5f9;
+  color: #475569;
+}
+.inv-btn-view:hover:not(:disabled) {
+  background-color: #e2e8f0;
+  color: #1e293b;
+}
+.inv-btn-edit {
+  background-color: rgba(59, 130, 246, 0.08);
+  color: #3b82f6;
+}
+.inv-btn-edit:hover:not(:disabled) {
+  background-color: #3b82f6;
+  color: #ffffff;
+}
+.inv-btn-delete {
+  background-color: rgba(239, 68, 68, 0.08);
+  color: #ef4444;
+}
+.inv-btn-delete:hover:not(:disabled) {
+  background-color: #ef4444;
+  color: #ffffff;
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   8. MOBILE MEDICINE CARDS
+   ───────────────────────────────────────────────────────────────────────────── */
+.inv-medicine-card {
+  border: 1px solid #e2e8f0;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.inv-medicine-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 12px -2px rgba(0, 0, 0, 0.06), 0 3px 6px -2px rgba(0, 0, 0, 0.03) !important;
+}
+.inv-card-title {
+  font-size: 1.1rem;
+}
+.inv-card-subtitle {
+  font-size: 0.85rem;
+}
+.inv-card-stock-panel {
+  border: 1px solid #e2e8f0;
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   9. SYSTEM & INPUT FORM LAYOUTS
+   ───────────────────────────────────────────────────────────────────────────── */
+.inv-form-container-card {
+  border: 1px solid #e2e8f0;
+}
+.inv-form-label {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #334155;
+  margin-bottom: 0.35rem;
+}
+.inv-required {
+  color: #ef4444;
+}
+.inv-optional-label {
+  color: #94a3b8;
+  font-weight: 400;
+  font-size: 0.8rem;
+}
+.inv-form-control {
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  padding: 0.55rem 0.75rem;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+.inv-form-control:focus {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+}
+.inv-textarea {
+  resize: vertical;
+}
+.inv-field-hint {
+  font-size: 0.775rem;
+  color: #64748b;
+  margin-top: 0.25rem;
+}
+.inv-char-count {
+  text-align: right;
+  font-size: 0.75rem;
+  color: #94a3b8;
+  margin-top: 0.25rem;
+}
+.inv-input-error {
+  border-color: #ef4444 !important;
+  background-color: #fdf2f2;
+}
+.inv-input-error:focus {
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.15) !important;
+}
+.inv-field-error {
+  color: #ef4444;
+  font-size: 0.775rem;
+  font-weight: 500;
+  margin-top: 0.25rem;
+  display: flex;
+  align-items: center;
+}
+
+/* Logical divider headers inside form pages */
+.inv-form-section-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #64748b;
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+  border-bottom: 1px solid #e2e8f0;
+  padding-bottom: 0.5rem;
+}
+.inv-form-section-header:first-of-type {
+  margin-top: 0.5rem;
+}
+.inv-section-icon {
+  color: #3b82f6;
+}
+
+/* Form Action Button Bar */
+.inv-form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  margin-top: 2.5rem;
+  border-top: 1px solid #e2e8f0;
+  padding-top: 1.5rem;
+}
+
+/* Global validation summary alert box */
+.inv-validation-summary {
+  background-color: #fef2f2;
+  border: 1px solid rgba(239, 68, 68, 0.15);
+  color: #b91c1c;
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   10. DETAILS PAGE PANELS & METRICS
+   ───────────────────────────────────────────────────────────────────────────── */
+.inv-details-card {
+  border: 1px solid #e2e8f0;
+}
+.inv-detail-item {
+  display: flex;
+  flex-direction: column;
+}
+.inv-detail-label {
+  font-weight: 600;
+  letter-spacing: 0.03em;
+}
+.inv-detail-value {
+  font-size: 1rem;
+}
+.inv-status-pill {
+  font-size: 0.875rem;
+  font-weight: 700;
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   11. EMPTY STATES & ERROR PANELS
+   ───────────────────────────────────────────────────────────────────────────── */
+.inv-empty-state {
+  border: 1px solid #e2e8f0;
+  background-color: #ffffff;
+  border-radius: 12px;
+}
+.inv-spinner-wrap {
+  min-height: 200px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   12. SWEETALERT OVERRIDES (POPUP ALIGNMENT)
+   ───────────────────────────────────────────────────────────────────────────── */
+.inv-swal-popup {
+  font-family: inherit;
+}
+.inv-swal-title {
+  font-size: 1.35rem !important;
+}
+.inv-swal-html {
+  font-size: 0.95rem !important;
+}
+.inv-swal-actions {
+  width: 100%;
+}
