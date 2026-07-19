@@ -1,68 +1,75 @@
-/**
- * @file        routes.jsx
- * @module      App
- * @purpose     Root application router. Defines all top-level routes and
- *              delegates module-specific child routes to their own route
- *              config files. Inventory sub-routes are nested under /inventory
- *              using React Router's <Outlet /> pattern.
- * @dependencies react-router-dom, all module route configs and page components
- * @exports     router (default) — BrowserRouter instance
- */
+import { createBrowserRouter, Outlet, Navigate } from "react-router-dom";
 
-import { createBrowserRouter, Outlet } from "react-router-dom";
-
-// ── Non-inventory module pages (preserved from original routes) ──────────────
 import Login         from "../modules/auth/pages/Login";
 import Dashboard     from "../modules/dashboard/pages/Dashboard";
 import Sales         from "../modules/sales/pages/Sales";
 import Expiry        from "../modules/expiry/pages/Expiry";
 import Notifications from "../modules/notifications/pages/Notifications";
 
-// ── Inventory module — self-contained route config ───────────────────────────
-// inventoryRoutes exports an array of child RouteObjects:
-//   index        → /inventory           (Inventory list)
-//   add          → /inventory/add       (Add Medicine form)
-//   edit/:id     → /inventory/edit/:id  (Edit Medicine form)
-//   details/:id  → /inventory/details/:id (Read-only detail view)
+import ProtectedRoute from "../modules/auth/routes/ProtectedRoute";
 import inventoryRoutes from "../modules/inventory/inventoryRoutes";
+import useAuth from "../modules/auth/hooks/useAuth";
+import { AUTH_ROUTES } from "../modules/auth/constants/authConstants";
 
-// ─────────────────────────────────────────────────────────────────────────────
-// ROOT ROUTER
-// Each module owns its own route config. The root router only knows about
-// top-level paths — child routing is delegated to the module files.
-// ─────────────────────────────────────────────────────────────────────────────
+const RootRedirect = () => {
+  const { currentUser } = useAuth();
+  return currentUser ? (
+    <Navigate to={AUTH_ROUTES.DASHBOARD} replace />
+  ) : (
+    <Navigate to={AUTH_ROUTES.LOGIN} replace />
+  );
+};
+
 const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <RootRedirect />,
+  },
   {
     path: "/login",
     element: <Login />,
   },
   {
     path: "/dashboard",
-    element: <Dashboard />,
+    element: (
+      <ProtectedRoute>
+        <Dashboard />
+      </ProtectedRoute>
+    ),
   },
-
-  // ── Inventory module ───────────────────────────────────────────────────────
-  // <Outlet /> renders the matched child route component.
-  // The parent /inventory path itself has no UI — the index child handles it.
   {
     path: "/inventory",
-    element: <Outlet />,
+    element: (
+      <ProtectedRoute>
+        <Outlet />
+      </ProtectedRoute>
+    ),
     children: inventoryRoutes,
   },
-
-  // ── Other modules (routes unchanged) ──────────────────────────────────────
   {
     path: "/sales",
-    element: <Sales />,
+    element: (
+      <ProtectedRoute>
+        <Sales />
+      </ProtectedRoute>
+    ),
   },
   {
     path: "/expiry",
-    element: <Expiry />,
+    element: (
+      <ProtectedRoute>
+        <Expiry />
+      </ProtectedRoute>
+    ),
   },
   {
     path: "/notifications",
-    element: <Notifications />,
+    element: (
+      <ProtectedRoute>
+        <Notifications />
+      </ProtectedRoute>
+    ),
   },
 ]);
 
-export default router;
+export default router;

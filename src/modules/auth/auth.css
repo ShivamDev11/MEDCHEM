@@ -1,0 +1,82 @@
+/* ── Auth Wrapper ─────────────────────────────────────────────────────────── */
+.auth-wrapper {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #1a237e 0%, #0d47a1 50%, #01579b 100%);
+  padding: 1.5rem;
+}
+
+/* ── Auth Card ────────────────────────────────────────────────────────────── */
+.auth-card {
+  width: 100%;
+  max-width: 440px;
+  border-radius: 1rem;
+  overflow: hidden;
+}
+
+/* ── Auth Header ──────────────────────────────────────────────────────────── */
+.auth-header {
+  background: linear-gradient(135deg, #1565c0, #0288d1);
+  padding: 2rem 1.5rem 1.5rem;
+  color: #fff;
+}
+
+.auth-logo-icon {
+  font-size: 3rem;
+  display: block;
+}
+
+.auth-title {
+  font-size: 1.8rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+  margin: 0;
+  color: #fff;
+}
+
+.auth-subtitle {
+  font-size: 0.85rem;
+  opacity: 0.85;
+  margin: 0.25rem 0 0;
+  color: #fff;
+}
+
+/* ── Form Controls ────────────────────────────────────────────────────────── */
+.auth-card .form-control:focus {
+  border-color: #0288d1;
+  box-shadow: 0 0 0 0.2rem rgba(2, 136, 209, 0.2);
+}
+
+.auth-card .btn-primary {
+  background: linear-gradient(135deg, #1565c0, #0288d1);
+  border: none;
+  letter-spacing: 0.5px;
+  transition: opacity 0.2s ease;
+}
+
+.auth-card .btn-primary:hover:not(:disabled) {
+  opacity: 0.9;
+}
+
+.auth-card .btn-primary:disabled {
+  opacity: 0.7;
+}
+
+/* ── Card Footer ──────────────────────────────────────────────────────────── */
+.auth-card .card-footer {
+  background-color: #f8f9fa;
+  border-top: 1px solid #e9ecef;
+}
+
+/* ── Responsive ───────────────────────────────────────────────────────────── */
+@media (max-width: 480px) {
+  .auth-card {
+    border-radius: 0.75rem;
+  }
+
+  .auth-title {
+    font-size: 1.5rem;
+  }
+}
