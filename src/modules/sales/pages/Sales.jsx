@@ -7,6 +7,7 @@ import SaleForm from '../components/SaleForm';
 import Invoice from '../components/Invoice';
 import SalesHistory from '../components/SalesHistory';
 import { getSalesHistory, getInventoryMetrics } from '../services/salesService';
+import { playSale, playError } from '../../../shared/services/audioService';
 
 // ---------------------------------------------------------------------------
 // Helper: apply date filter to a list of sales documents
@@ -159,6 +160,9 @@ const Sales = () => {
 
   // ── Helpers ───────────────────────────────────────────────────────────────
   const showToast = (message, type = 'success') => {
+    if (type === 'danger' || type === 'error') {
+      playError();
+    }
     setToast({ show: true, message, type });
     setTimeout(() => setToast({ show: false, message: '', type: 'success' }), 3000);
   };
@@ -176,6 +180,7 @@ const Sales = () => {
     const result = await handleCompleteSale(paymentMethod, customerName);
 
     if (result.success) {
+      playSale();
       showToast('Sale completed successfully!', 'success');
       setLastSaleDetails({
         invoiceNumber: result.invoiceNumber,

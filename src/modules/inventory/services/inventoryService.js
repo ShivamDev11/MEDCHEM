@@ -21,8 +21,6 @@ import {
   query,
   where,
   orderBy,
-  limit,
-  startAfter,
   serverTimestamp,
 } from "firebase/firestore";
 
@@ -86,49 +84,72 @@ const getExpiryThreshold = (days) => {
 // ═════════════════════════════════════════════════════════════════════════════
 // 1. getMedicines
 // ─────────────────────────────────────────────────────────────────────────────
-// Fetches one page of ACTIVE medicines using server-side sorting and cursor
-// pagination. Only ACTIVE documents are returned (soft-deleted are excluded).
+// Fetches ALL ACTIVE medicines, sorts client-side, then paginates in memory.
+// This approach avoids the need for composite Firestore indexes for every
+// sort field combination (status + createdAt, status + medicineName, etc.).
 //
-// NOTE: Composite Firestore indexes are required for non-default sort fields.
-//       If Firestore throws an "index required" error, click the link in the
-//       Firebase console error message to create the index automatically.
+// With a typical pharmacy inventory of < 5,000 medicines, client-side
+// sorting + pagination is fast and eliminates Firestore index errors.
 //
-// @param {string}               sortField - Firestore field to sort by
-//                                           Default: "createdAt"
-// @param {string}               sortDir   - "asc" | "desc". Default: "desc"
-// @param {DocumentSnapshot|null} lastDoc  - Cursor snapshot for startAfter.
-//                                           Pass null for the first page.
+// @param {string} sortField - Field name to sort by. Default: "createdAt"
+// @param {string} sortDir   - "asc" | "desc". Default: "desc"
+// @param {number} page      - 1-based page number. Default: 1
 //
 // @returns {Promise<{
-//   medicines:   object[],          // mapped medicine objects for this page
-//   lastVisible: DocumentSnapshot|null, // cursor to pass for next page
-//   hasMore:     boolean             // false when no further pages exist
+//   medicines:   object[],   // sorted + paginated medicine objects
+//   totalCount:  number,     // total ACTIVE medicines (for pagination UI)
+//   hasMore:     boolean     // false when on the last page
 // }>}
 // ═════════════════════════════════════════════════════════════════════════════
 export const getMedicines = async (
   sortField = "createdAt",
   sortDir   = "desc",
-  lastDoc   = null
+  page      = 1
 ) => {
-  const constraints = [
-    where("status", "==", MEDICINE_STATUS.ACTIVE),
-    orderBy(sortField, sortDir),
-    limit(PAGINATION_LIMIT),
-  ];
-
-  if (lastDoc) {
-    // startAfter must be inserted before limit for correct cursor behaviour
-    constraints.splice(constraints.length - 1, 0, startAfter(lastDoc));
-  }
-
-  const q = query(medicinesRef, ...constraints);
+  // Single query — only filter by status, no orderBy (avoids composite index)
+  const q = query(
+    medicinesRef,
+    where("status", "==", MEDICINE_STATUS.ACTIVE)
+  );
   const snapshot = await getDocs(q);
+  let allMedicines = snapshot.docs.map(mapDoc);
 
-  const medicines    = snapshot.docs.map(mapDoc);
-  const lastVisible  = snapshot.docs[snapshot.docs.length - 1] ?? null;
-  const hasMore      = snapshot.docs.length === PAGINATION_LIMIT;
+  // Client-side sort
+  allMedicines.sort((a, b) => {
+    let valA = a[sortField];
+    let valB = b[sortField];
 
-  return { medicines, lastVisible, hasMore };
+    // Handle Firestore Timestamps (createdAt, updatedAt)
+    if (valA && typeof valA === "object" && valA.toDate) valA = valA.toDate();
+    if (valB && typeof valB === "object" && valB.toDate) valB = valB.toDate();
+
+    // Handle numeric fields
+    if (typeof valA === "number" && typeof valB === "number") {
+      return sortDir === "asc" ? valA - valB : valB - valA;
+    }
+
+    // Handle dates
+    if (valA instanceof Date && valB instanceof Date) {
+      return sortDir === "asc" ? valA - valB : valB - valA;
+    }
+
+    // Handle strings (including date strings like "2025-08-05")
+    const strA = String(valA ?? "").toLowerCase();
+    const strB = String(valB ?? "").toLowerCase();
+    if (sortDir === "asc") {
+      return strA.localeCompare(strB);
+    }
+    return strB.localeCompare(strA);
+  });
+
+  // Client-side pagination
+  const totalCount = allMedicines.length;
+  const startIdx   = (page - 1) * PAGINATION_LIMIT;
+  const endIdx     = startIdx + PAGINATION_LIMIT;
+  const medicines  = allMedicines.slice(startIdx, endIdx);
+  const hasMore    = endIdx < totalCount;
+
+  return { medicines, totalCount, hasMore };
 };
 
 

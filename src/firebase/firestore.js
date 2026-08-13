@@ -1,4 +1,4 @@
-import app from "./config";
+import app from "./config.js";
 
 import { getFirestore } from "firebase/firestore";
 

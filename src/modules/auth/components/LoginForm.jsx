@@ -4,6 +4,7 @@ import { toast } from "react-toastify";
 import { FaEye, FaEyeSlash, FaSignInAlt } from "react-icons/fa";
 
 import { loginWithEmail } from "../services/authService";
+import { playLogin, playError } from "../../../shared/services/audioService";
 import { AUTH_ROUTES, AUTH_ERRORS, AUTH_MESSAGES, AUTH_VALIDATION } from "../constants/authConstants";
 
 const LoginForm = () => {
@@ -37,9 +38,14 @@ const LoginForm = () => {
 
     try {
       await loginWithEmail(email, password);
+      
+      // Play sound on successful login
+      playLogin();
+      
       toast.success(AUTH_MESSAGES.LOGIN_SUCCESS);
       navigate(AUTH_ROUTES.DASHBOARD);
     } catch (error) {
+      playError();
       const message = AUTH_ERRORS[error.code] || AUTH_ERRORS.DEFAULT;
       toast.error(message);
     } finally {

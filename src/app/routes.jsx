@@ -11,6 +11,8 @@ import inventoryRoutes from "../modules/inventory/inventoryRoutes";
 import useAuth from "../modules/auth/hooks/useAuth";
 import { AUTH_ROUTES } from "../modules/auth/constants/authConstants";
 
+import AppLayout from "./components/AppLayout";
+
 const RootRedirect = () => {
   const { currentUser } = useAuth();
   return currentUser ? (
@@ -30,45 +32,34 @@ const router = createBrowserRouter([
     element: <Login />,
   },
   {
-    path: "/dashboard",
     element: (
       <ProtectedRoute>
-        <Dashboard />
+        <AppLayout />
       </ProtectedRoute>
     ),
-  },
-  {
-    path: "/inventory",
-    element: (
-      <ProtectedRoute>
-        <Outlet />
-      </ProtectedRoute>
-    ),
-    children: inventoryRoutes,
-  },
-  {
-    path: "/sales",
-    element: (
-      <ProtectedRoute>
-        <Sales />
-      </ProtectedRoute>
-    ),
-  },
-  {
-    path: "/expiry",
-    element: (
-      <ProtectedRoute>
-        <Expiry />
-      </ProtectedRoute>
-    ),
-  },
-  {
-    path: "/notifications",
-    element: (
-      <ProtectedRoute>
-        <Notifications />
-      </ProtectedRoute>
-    ),
+    children: [
+      {
+        path: "/dashboard",
+        element: <Dashboard />,
+      },
+      {
+        path: "/inventory",
+        element: <Outlet />,
+        children: inventoryRoutes,
+      },
+      {
+        path: "/sales",
+        element: <Sales />,
+      },
+      {
+        path: "/expiry",
+        element: <Expiry />,
+      },
+      {
+        path: "/notifications",
+        element: <Notifications />,
+      },
+    ],
   },
 ]);
 

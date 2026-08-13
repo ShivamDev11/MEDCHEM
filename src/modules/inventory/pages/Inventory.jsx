@@ -33,6 +33,7 @@ import InventoryStats from "../components/InventoryStats";
 import SearchBar from "../components/SearchBar";
 import MedicineTable from "../components/MedicineTable";
 import { showDeleteConfirmation, showDeleteSuccess } from "../components/DeleteModal";
+import { playInventoryDeleted, playError } from "../../../shared/services/audioService";
 
 import "../inventory.css";
 
@@ -54,11 +55,6 @@ function Inventory() {
   // Pagination states
   const [currentPage, setCurrentPage] = useState(1);
   const [hasMore, setHasMore] = useState(false);
-  const [lastVisibleDoc, setLastVisibleDoc] = useState(null);
-  
-  // Stack of cursors to support backward pagination
-  // cursors[0] represents the starting cursor (null)
-  const [cursors, setCursors] = useState([null]);
   
   // Key to force reload statistics when a CRUD action happens
   const [statsKey, setStatsKey] = useState(0);
@@ -70,27 +66,15 @@ function Inventory() {
   }, [sortValue]);
 
   // ── Fetch Page Data ────────────────────────────────────────────────────────
-  const fetchPage = useCallback(async (cursor = null, direction = "next") => {
+  const fetchPage = useCallback(async (page = 1) => {
     setLoading(true);
     setError(null);
     try {
       const { field, direction: dir } = activeSort;
-      const result = await getMedicines(field, dir, cursor);
+      const result = await getMedicines(field, dir, page);
       
       setMedicines(result.medicines);
       setHasMore(result.hasMore);
-      setLastVisibleDoc(result.lastVisible);
-
-      // Manage cursor stacks based on navigation direction
-      if (direction === "next" && result.lastVisible) {
-        setCursors((prev) => {
-          // Only push if cursor does not already exist at the next page slot
-          if (prev.length <= currentPage) {
-            return [...prev, result.lastVisible];
-          }
-          return prev;
-        });
-      }
     } catch (err) {
       console.error("[Inventory] Failed to fetch medicines:", err);
       setError(TOAST_MESSAGES.LOAD_ERROR);
@@ -98,13 +82,12 @@ function Inventory() {
     } finally {
       setLoading(false);
     }
-  }, [activeSort, currentPage]);
+  }, [activeSort]);
 
   // ── Reload/Reset List ──────────────────────────────────────────────────────
   const handleReload = useCallback(() => {
     setCurrentPage(1);
-    setCursors([null]);
-    fetchPage(null, "next");
+    fetchPage(1);
     setStatsKey((prev) => prev + 1); // Refresh stat aggregates
   }, [fetchPage]);
 
@@ -117,17 +100,17 @@ function Inventory() {
   // ── Navigation callbacks ───────────────────────────────────────────────────
   const handleNextPage = useCallback(() => {
     if (!hasMore || loading) return;
-    const nextCursor = cursors[currentPage];
-    setCurrentPage((prev) => prev + 1);
-    fetchPage(nextCursor, "next");
-  }, [hasMore, loading, currentPage, cursors, fetchPage]);
+    const nextPage = currentPage + 1;
+    setCurrentPage(nextPage);
+    fetchPage(nextPage);
+  }, [hasMore, loading, currentPage, fetchPage]);
 
   const handlePrevPage = useCallback(() => {
     if (currentPage === 1 || loading) return;
-    const prevCursor = cursors[currentPage - 2];
-    setCurrentPage((prev) => prev - 1);
-    fetchPage(prevCursor, "prev");
-  }, [currentPage, loading, cursors, fetchPage]);
+    const prevPage = currentPage - 1;
+    setCurrentPage(prevPage);
+    fetchPage(prevPage);
+  }, [currentPage, loading, fetchPage]);
 
   // ── Search & Filter ────────────────────────────────────────────────────────
   // Client-side search filters the active page's elements
@@ -169,6 +152,7 @@ function Inventory() {
       await softDeleteMedicine(id, "system"); // Fallback UID
       
       // 3. Show Toast Notification & SweetAlert success popup
+      playInventoryDeleted();
       toast.success(TOAST_MESSAGES.MEDICINE_DELETED);
       showDeleteSuccess(target.medicineName);
 
@@ -176,6 +160,7 @@ function Inventory() {
       handleReload();
     } catch (err) {
       console.error("[Inventory] Deletion failed:", err);
+      playError();
       toast.error(TOAST_MESSAGES.DELETE_ERROR);
       setLoading(false);
     }

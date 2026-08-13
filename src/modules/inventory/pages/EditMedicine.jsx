@@ -17,7 +17,8 @@ import { FiAlertTriangle, FiArrowLeft } from "react-icons/fi";
 import "react-toastify/dist/ReactToastify.css";
 
 import { getMedicineById, updateMedicine } from "../services/inventoryService";
-import { TOAST_MESSAGES } from "../constants/inventoryConstants";
+import { TOAST_MESSAGES, VALIDATION_RULES } from "../constants/inventoryConstants";
+import { playInventoryUpdated, playError } from "../../../shared/services/audioService";
 import InventoryHeader from "../components/InventoryHeader";
 import MedicineForm from "../components/MedicineForm";
 
@@ -72,6 +73,7 @@ function EditMedicine() {
       // Trigger update in service layer
       await updateMedicine(id, formData, "system"); // Fallback UID
       
+      playInventoryUpdated();
       toast.success(TOAST_MESSAGES.MEDICINE_UPDATED);
       
       // Delay redirect to allow toast consumption
@@ -80,6 +82,7 @@ function EditMedicine() {
       }, 1500);
     } catch (err) {
       console.error("[EditMedicine] Update failed:", err);
+      playError();
       
       if (err.code === "DUPLICATE") {
         toast.warning(TOAST_MESSAGES.DUPLICATE_FOUND);

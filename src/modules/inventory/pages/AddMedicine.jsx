@@ -17,6 +17,7 @@ import "react-toastify/dist/ReactToastify.css";
 
 import { createMedicine } from "../services/inventoryService";
 import { TOAST_MESSAGES, FORM_DEFAULT_VALUES } from "../constants/inventoryConstants";
+import { playInventoryAdded, playError } from "../../../shared/services/audioService";
 import InventoryHeader from "../components/InventoryHeader";
 import MedicineForm from "../components/MedicineForm";
 
@@ -38,6 +39,7 @@ function AddMedicine() {
       await createMedicine(formData, "system");
       
       // Notify user
+      playInventoryAdded();
       toast.success(TOAST_MESSAGES.MEDICINE_ADDED);
       
       // Wait briefly for the toast to be readable before redirecting
@@ -47,6 +49,7 @@ function AddMedicine() {
     } catch (error) {
       console.error("[AddMedicine] Failed to add medicine:", error);
       
+      playError();
       if (error.code === "DUPLICATE") {
         toast.warning(TOAST_MESSAGES.DUPLICATE_FOUND);
       } else {

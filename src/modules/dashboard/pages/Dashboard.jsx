@@ -1,21 +1,14 @@
+import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
-import { FiLogOut, FiBox, FiDollarSign, FiClock, FiBell } from "react-icons/fi";
-import { logoutUser } from "../../auth/services/authService";
+import { FiBox, FiDollarSign, FiClock, FiBell } from "react-icons/fi";
+import { playDashboard } from "../../../shared/services/audioService";
 
 function Dashboard() {
   const navigate = useNavigate();
 
-  const handleLogout = async () => {
-    try {
-      await logoutUser();
-      toast.success("Logged out successfully");
-      navigate("/login");
-    } catch (error) {
-      console.error("Logout failed:", error);
-      toast.error("Failed to log out. Please try again.");
-    }
-  };
+  useEffect(() => {
+    playDashboard();
+  }, []);
 
   const modules = [
     {
@@ -49,57 +42,36 @@ function Dashboard() {
   ];
 
   return (
-    <div className="min-vh-100 bg-light">
-      {/* ── Top Navigation Bar ─────────────────────────────────────────── */}
-      <nav className="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm">
-        <div className="container">
-          <span className="navbar-brand fw-bold d-flex align-items-center gap-2">
-            <span>💊</span> MedChem
-          </span>
-          <button
-            type="button"
-            className="btn btn-danger d-flex align-items-center gap-2"
-            onClick={handleLogout}
-            aria-label="Logout"
-          >
-            <FiLogOut />
-            <span>Logout</span>
-          </button>
-        </div>
-      </nav>
+    <div className="container py-5">
+      <div className="bg-white rounded-3 shadow-sm p-4 mb-5 border-0">
+        <h1 className="h3 fw-bold text-dark">Welcome to MedChem Dashboard</h1>
+        <p className="text-muted mb-0">
+          Smart Pharmacy Inventory System. Select a module below to get started.
+        </p>
+      </div>
 
-      {/* ── Dashboard Content ──────────────────────────────────────────── */}
-      <main className="container py-5">
-        <div className="bg-white rounded-3 shadow-sm p-4 mb-5 border-0">
-          <h1 className="h3 fw-bold text-dark">Welcome to MedChem Dashboard</h1>
-          <p className="text-muted mb-0">
-            Smart Pharmacy Inventory System. Select a module below to get started.
-          </p>
-        </div>
-
-        {/* ── Grid of Modules ───────────────────────────────────────────── */}
-        <div className="row g-4">
-          {modules.map((mod, idx) => (
-            <div key={idx} className="col-12 col-md-6 col-lg-3">
-              <div className="card h-100 shadow-sm border-0 rounded-3 text-center p-3">
-                <div className="card-body d-flex flex-column align-items-center">
-                  {mod.icon}
-                  <h5 className="card-title fw-bold">{mod.title}</h5>
-                  <p className="card-text text-muted small flex-grow-1">
-                    {mod.description}
-                  </p>
-                  <button
-                    onClick={() => navigate(mod.path)}
-                    className={`btn ${mod.btnClass} w-100 mt-3`}
-                  >
-                    Open Module
-                  </button>
-                </div>
+      {/* ── Grid of Modules ───────────────────────────────────────────── */}
+      <div className="row g-4">
+        {modules.map((mod, idx) => (
+          <div key={idx} className="col-12 col-md-6 col-lg-3">
+            <div className="card h-100 shadow-sm border-0 rounded-3 text-center p-3">
+              <div className="card-body d-flex flex-column align-items-center">
+                {mod.icon}
+                <h5 className="card-title fw-bold">{mod.title}</h5>
+                <p className="card-text text-muted small flex-grow-1">
+                  {mod.description}
+                </p>
+                <button
+                  onClick={() => navigate(mod.path)}
+                  className={`btn ${mod.btnClass} w-100 mt-3`}
+                >
+                  Open Module
+                </button>
               </div>
             </div>
-          ))}
-        </div>
-      </main>
+          </div>
+        ))}
+      </div>
     </div>
   );
 }

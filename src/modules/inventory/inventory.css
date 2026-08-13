@@ -597,3 +597,61 @@
 .inv-swal-actions {
   width: 100%;
 }
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   13. APP LAYOUT CUSTOM NAVBAR & DROPDOWN STYLES
+   ───────────────────────────────────────────────────────────────────────────── */
+.cursor-pointer {
+  cursor: pointer;
+}
+
+.hover-text-white:hover {
+  color: #ffffff !important;
+}
+
+/* Custom Dropdown Styling */
+.dropdown-menu-custom {
+  background-color: #ffffff;
+  border: 1px solid rgba(0, 0, 0, 0.15) !important;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15) !important;
+  animation: fadeInDropdown 0.2s ease-out;
+}
+
+@keyframes fadeInDropdown {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.dropdown-item-custom {
+  transition: background-color 0.15s ease;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.dropdown-item-custom:hover {
+  background-color: #f8fafc !important;
+}
+
+/* Small adjustments to custom scrollbar */
+.dropdown-menu-custom div::-webkit-scrollbar {
+  width: 6px;
+}
+
+.dropdown-menu-custom div::-webkit-scrollbar-track {
+  background: #f1f5f9;
+}
+
+.dropdown-menu-custom div::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 3px;
+}
+
+.dropdown-menu-custom div::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+

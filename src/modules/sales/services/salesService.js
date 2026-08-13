@@ -12,6 +12,7 @@ import {
 import db from '../../../firebase/firestore';
 import { SALES_COLLECTIONS, SALE_STATUS, NOTIFICATION_TYPES, ACTION_TYPES, MODULES } from '../constants/salesConstants';
 import { generateInvoiceNumber } from '../utils/invoiceGenerator';
+import { playLowStock, playOutOfStock } from '../../../shared/services/audioService';
 
 /**
  * Searches inventory for available medicines.
@@ -177,6 +178,11 @@ export const completeSale = async (cart, saleData, user) => {
         // Create Notification if stock is low
         const minStock = Number(invDocData.minimumStock || 10);
         if (newStock <= minStock) {
+          if (newStock === 0) {
+            playOutOfStock();
+          } else {
+            playLowStock();
+          }
           const notifRef = doc(collection(db, SALES_COLLECTIONS.NOTIFICATIONS));
           transaction.set(notifRef, {
             type: NOTIFICATION_TYPES.LOW_STOCK,
