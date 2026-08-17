@@ -220,6 +220,13 @@ function AppLayout() {
             >
               Expiry Tracker
             </span>
+            <span
+              onClick={() => navigate("/reports")}
+              className={`nav-link px-2 cursor-pointer ${isActive("/reports") ? "active text-white fw-bold" : "text-white-50"}`}
+              style={{ cursor: "pointer" }}
+            >
+              Reports
+            </span>
           </div>
 
           {/* Right Align Actions */}

@@ -1,0 +1,21 @@
+/* reports.css — scoped styles for the Reports module */
+
+/* Smooth placeholder animation */
+.reports-page .placeholder {
+  animation: placeholder-glow 1.5s ease-in-out infinite;
+}
+
+/* Export dropdown button group */
+.reports-export-btn {
+  font-size: 0.8rem;
+}
+
+/* Section divider label */
+.reports-section-label {
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #6c757d;
+  margin-bottom: 0.75rem;
+}

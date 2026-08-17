@@ -5,6 +5,7 @@ import Dashboard     from "../modules/dashboard/pages/Dashboard";
 import Sales         from "../modules/sales/pages/Sales";
 import Expiry        from "../modules/expiry/pages/Expiry";
 import Notifications from "../modules/notifications/pages/Notifications";
+import Reports       from "../modules/reports/pages/Reports";
 
 import ProtectedRoute from "../modules/auth/routes/ProtectedRoute";
 import inventoryRoutes from "../modules/inventory/inventoryRoutes";
@@ -58,6 +59,10 @@ const router = createBrowserRouter([
       {
         path: "/notifications",
         element: <Notifications />,
+      },
+      {
+        path: "/reports",
+        element: <Reports />,
       },
     ],
   },
