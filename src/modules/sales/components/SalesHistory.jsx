@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { getSaleItems } from '../services/salesService';
 import { formatInvoiceDate } from '../utils/invoiceGenerator';
-import { FaEye, FaSearch, FaFilter, FaSync } from 'react-icons/fa';
+import { FiEye, FiSearch, FiFilter, FiRefreshCw, FiCalendar } from 'react-icons/fi';
 import Invoice from './Invoice';
 
 // ---------------------------------------------------------------------------
@@ -14,6 +14,8 @@ const applyDateFilter = (sales, dateFilter, customStart, customEnd) => {
   now.setHours(0, 0, 0, 0);
 
   switch (dateFilter) {
+    case 'ALL':
+      return sales;
     case 'TODAY': {
       return sales.filter(s => {
         const d = new Date(s.date);
@@ -54,12 +56,12 @@ const applyDateFilter = (sales, dateFilter, customStart, customEnd) => {
       });
     }
     default:
-      return sales; // ALL
+      return sales;
   }
 };
 
 // ---------------------------------------------------------------------------
-// SalesHistory — controlled component; filter state lives in parent Sales.jsx
+// SalesHistory
 // ---------------------------------------------------------------------------
 const SalesHistory = ({
   allSales = [],
@@ -80,7 +82,6 @@ const SalesHistory = ({
   const [isViewingInvoice,  setIsViewingInvoice]  = useState(false);
   const [isLoadingInvoice,  setIsLoadingInvoice]  = useState(false);
 
-  // ── Derived: filter then search ──────────────────────────────────────────
   const dateFiltered = applyDateFilter(allSales, dateFilter, customStart, customEnd);
 
   const filteredSales = searchTerm.trim()
@@ -94,7 +95,6 @@ const SalesHistory = ({
       })
     : dateFiltered;
 
-  // ── Invoice view ─────────────────────────────────────────────────────────
   const handleViewInvoice = async (sale) => {
     setIsLoadingInvoice(true);
     setSelectedSale(sale);
@@ -109,21 +109,22 @@ const SalesHistory = ({
     }
   };
 
-  // ── Render ────────────────────────────────────────────────────────────────
   return (
-    <div className="card shadow-sm border-0">
-      <div className="card-body">
+    <div className="card sales-history-card border-0 shadow-sm">
+      <div className="card-body p-4">
 
-        {/* Filter bar */}
-        <div className="row mb-4 align-items-end g-2">
+        {/* Unified Search / Filter Toolbar */}
+        <div className="d-flex align-items-center gap-3 flex-wrap mb-4">
 
           {/* Search */}
-          <div className="col-md-5">
-            <div className="input-group">
-              <span className="input-group-text bg-white"><FaSearch className="text-muted" /></span>
+          <div style={{ flex: "1 1 280px" }}>
+            <div className="input-group sales-search-input-group" style={{ background: "#f8fafc" }}>
+              <span className="input-group-text border-0 bg-transparent text-muted pe-1">
+                <FiSearch size={14} />
+              </span>
               <input
                 type="text"
-                className="form-control"
+                className="form-control sales-search-input"
                 placeholder="Search Invoice No, Customer, Payment..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
@@ -131,14 +132,17 @@ const SalesHistory = ({
             </div>
           </div>
 
-          {/* Date filter */}
-          <div className="col-md-3">
-            <div className="input-group">
-              <span className="input-group-text bg-white"><FaFilter className="text-muted" /></span>
+          {/* Date range filter selector */}
+          <div style={{ minWidth: "160px" }}>
+            <div className="input-group sales-search-input-group" style={{ background: "#f8fafc" }}>
+              <span className="input-group-text border-0 bg-transparent text-muted pe-1">
+                <FiFilter size={14} />
+              </span>
               <select
-                className="form-select"
+                className="form-select sales-search-input"
                 value={dateFilter}
                 onChange={(e) => setDateFilter(e.target.value)}
+                style={{ cursor: "pointer" }}
               >
                 <option value="ALL">All Time</option>
                 <option value="TODAY">Today</option>
@@ -150,49 +154,64 @@ const SalesHistory = ({
             </div>
           </div>
 
-          {/* Custom date range (only when CUSTOM is selected) */}
+          {/* Custom Date Ranges */}
           {dateFilter === 'CUSTOM' && (
-            <>
-              <div className="col-md-2">
+            <div className="d-flex align-items-center gap-2 flex-wrap">
+              <div className="input-group sales-search-input-group" style={{ width: "160px", background: "#f8fafc" }}>
+                <span className="input-group-text border-0 bg-transparent text-muted pe-1">
+                  <FiCalendar size={13} />
+                </span>
                 <input
                   type="date"
-                  className="form-control"
+                  className="form-control sales-search-input"
                   value={customStart}
                   onChange={(e) => setCustomStart(e.target.value)}
-                  placeholder="From"
+                  title="Start Date"
                 />
               </div>
-              <div className="col-md-2">
+              <span className="text-muted small">to</span>
+              <div className="input-group sales-search-input-group" style={{ width: "160px", background: "#f8fafc" }}>
+                <span className="input-group-text border-0 bg-transparent text-muted pe-1">
+                  <FiCalendar size={13} />
+                </span>
                 <input
                   type="date"
-                  className="form-control"
+                  className="form-control sales-search-input"
                   value={customEnd}
                   onChange={(e) => setCustomEnd(e.target.value)}
-                  placeholder="To"
+                  title="End Date"
                 />
               </div>
-            </>
+            </div>
           )}
 
-          {/* Refresh */}
-          <div className="col-md-2 ms-auto">
+          {/* Refresh Button */}
+          <div className="ms-auto" style={{ minWidth: "120px" }}>
             <button
-              className="btn btn-outline-primary w-100"
+              className="btn btn-outline-primary d-flex align-items-center justify-content-center gap-2 fw-bold w-100 py-2"
               onClick={onRefresh}
               disabled={isLoading}
+              style={{ fontSize: "0.85rem", borderRadius: "8px" }}
             >
-              {isLoading
-                ? <><span className="spinner-border spinner-border-sm me-1" role="status" /> Loading...</>
-                : <><FaSync className="me-1" /> Refresh</>
-              }
+              {isLoading ? (
+                <>
+                  <span className="spinner-border spinner-border-sm" role="status" />
+                  <span>Loading...</span>
+                </>
+              ) : (
+                <>
+                  <FiRefreshCw size={13} />
+                  <span>Refresh</span>
+                </>
+              )}
             </button>
           </div>
         </div>
 
         {/* Results summary */}
         {!isLoading && (
-          <p className="text-muted small mb-3">
-            Showing <strong>{filteredSales.length}</strong> sale{filteredSales.length !== 1 ? 's' : ''}
+          <p className="text-muted small mb-3" style={{ fontSize: "0.8rem" }}>
+            Showing <strong>{filteredSales.length}</strong> sale invoice{filteredSales.length !== 1 ? 's' : ''}
             {searchTerm ? ` matching "${searchTerm}"` : ''}
           </p>
         )}
@@ -200,49 +219,59 @@ const SalesHistory = ({
         {/* Empty state */}
         {!isLoading && filteredSales.length === 0 && (
           <div className="text-center py-5 text-muted">
-            <h5 className="mb-1">No sales history found.</h5>
-            <p className="small">Try adjusting your filters or date range.</p>
+            <h5 className="fw-bold text-dark mb-1">No sales transaction history found</h5>
+            <p className="small text-secondary">Adjust your custom search inputs or selected date range.</p>
           </div>
         )}
 
         {/* Table */}
         {!isLoading && filteredSales.length > 0 && (
-          <div className="table-responsive">
-            <table className="table table-hover align-middle">
-              <thead className="table-light text-muted small text-uppercase">
+          <div className="table-responsive border rounded overflow-hidden">
+            <table className="table sales-history-table table-hover align-middle mb-0" style={{ fontSize: "0.875rem" }}>
+              <thead>
                 <tr>
-                  <th>Invoice No</th>
-                  <th>Date</th>
-                  <th>Customer</th>
-                  <th>Payment Method</th>
-                  <th className="text-end">Total Amount</th>
+                  <th className="ps-4">Invoice No</th>
+                  <th>Date Created</th>
+                  <th>Customer Info</th>
+                  <th>Payment Type</th>
+                  <th className="text-end">Total Paid</th>
                   <th className="text-center">Status</th>
-                  <th className="text-center">Action</th>
+                  <th className="text-center pe-4">Action</th>
                 </tr>
               </thead>
               <tbody>
                 {filteredSales.map((sale) => (
                   <tr key={sale.id}>
-                    <td className="fw-bold text-primary">{sale.invoiceNumber}</td>
+                    <td className="ps-4 fw-bold text-dark">{sale.invoiceNumber}</td>
                     <td>{formatInvoiceDate(sale.date)}</td>
-                    <td>{sale.customerName || 'Walk-in'}</td>
-                    <td><span className="badge bg-light text-dark border">{sale.paymentMethod}</span></td>
-                    <td className="text-end fw-bold">₹{Number(sale.netAmount).toFixed(2)}</td>
+                    <td className="fw-semibold text-secondary">{sale.customerName || 'Walk-in Customer'}</td>
+                    <td>
+                      <span className="badge bg-light text-dark border px-2.5 py-1 fw-bold" style={{ fontSize: "0.72rem" }}>
+                        {sale.paymentMethod}
+                      </span>
+                    </td>
+                    <td className="text-end fw-bold text-dark">₹{Number(sale.netAmount).toFixed(2)}</td>
                     <td className="text-center">
-                      <span className={`badge ${sale.status === 'Completed' ? 'bg-success' : 'bg-warning'}`}>
+                      <span className={`badge ${sale.status === 'Completed' ? 'bg-success-subtle text-success border border-success-subtle' : 'bg-warning-subtle text-warning border border-warning-subtle'} px-3 py-1 fw-bold`} style={{ fontSize: "0.72rem" }}>
                         {sale.status}
                       </span>
                     </td>
-                    <td className="text-center">
+                    <td className="text-center pe-4">
                       <button
-                        className="btn btn-sm btn-outline-primary"
+                        className="btn btn-sm inv-btn-icon inv-btn-view"
                         onClick={() => handleViewInvoice(sale)}
                         disabled={isLoadingInvoice && selectedSale?.id === sale.id}
+                        title="View Details"
+                        style={{ width: "auto", height: "auto", padding: "0.35rem 0.75rem", display: "inline-flex", gap: "6px" }}
                       >
-                        {isLoadingInvoice && selectedSale?.id === sale.id
-                          ? <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true" />
-                          : <><FaEye className="me-1" /> View</>
-                        }
+                        {isLoadingInvoice && selectedSale?.id === sale.id ? (
+                          <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true" />
+                        ) : (
+                          <>
+                            <FiEye size={13} />
+                            <span className="fw-bold" style={{ fontSize: "0.75rem" }}>View Invoice</span>
+                          </>
+                        )}
                       </button>
                     </td>
                   </tr>

@@ -24,13 +24,12 @@ import { TOAST_MESSAGES } from "../constants/inventoryConstants";
 
 // ─────────────────────────────────────────────────────────────────────────────
 // STAT CARD VISUAL CONFIG
-// Defines icon, label, colour tokens per card slot.
-// Only the `value` field is filled at runtime from Firestore data.
 // ─────────────────────────────────────────────────────────────────────────────
 const CARD_CONFIG = [
   {
     key:        "totalMedicines",
     label:      "Total Medicines",
+    hint:       "Active records",
     icon:       FiPackage,
     colorClass: "inv-stat-blue",
     id:         "inv-stat-total-medicines",
@@ -39,6 +38,7 @@ const CARD_CONFIG = [
   {
     key:        "totalStockQty",
     label:      "Total Stock Qty",
+    hint:       "Units in stock",
     icon:       FiLayers,
     colorClass: "inv-stat-indigo",
     id:         "inv-stat-total-stock",
@@ -47,6 +47,7 @@ const CARD_CONFIG = [
   {
     key:        "lowStock",
     label:      "Low Stock",
+    hint:       "Need reorder",
     icon:       FiAlertTriangle,
     colorClass: "inv-stat-orange",
     id:         "inv-stat-low-stock",
@@ -55,6 +56,7 @@ const CARD_CONFIG = [
   {
     key:        "expiringSoon",
     label:      "Expiring Soon",
+    hint:       "Within 30 days",
     icon:       FiClock,
     colorClass: "inv-stat-yellow",
     id:         "inv-stat-expiring",
@@ -63,6 +65,7 @@ const CARD_CONFIG = [
   {
     key:        "outOfStock",
     label:      "Out of Stock",
+    hint:       "Zero quantity",
     icon:       FiXCircle,
     colorClass: "inv-stat-red",
     id:         "inv-stat-out-of-stock",
@@ -71,7 +74,7 @@ const CARD_CONFIG = [
 ];
 
 // ─────────────────────────────────────────────────────────────────────────────
-// LOADING SKELETON — shown while stats are being fetched
+// LOADING SKELETON
 // ─────────────────────────────────────────────────────────────────────────────
 function StatCardSkeleton() {
   return (
@@ -101,7 +104,7 @@ function StatCard({ config, value }) {
       >
         {/* Icon bubble */}
         <div className="inv-stat-icon-wrap">
-          <Icon size={22} className="inv-stat-icon" aria-hidden="true" />
+          <Icon size={20} className="inv-stat-icon" aria-hidden="true" />
         </div>
 
         {/* Value */}
@@ -111,6 +114,9 @@ function StatCard({ config, value }) {
 
         {/* Label */}
         <div className="inv-stat-label">{config.label}</div>
+
+        {/* Contextual hint */}
+        <div className="inv-stat-hint">{config.hint}</div>
       </div>
     </div>
   );
@@ -120,16 +126,13 @@ function StatCard({ config, value }) {
 // MAIN COMPONENT
 // ─────────────────────────────────────────────────────────────────────────────
 function InventoryStats() {
-  // ── State ──────────────────────────────────────────────────────────────────
-  const [stats,   setStats]   = useState(null);   // null = not yet loaded
+  const [stats,   setStats]   = useState(null);
   const [loading, setLoading] = useState(true);
   const [error,   setError]   = useState(null);
 
-  // ── Data Fetch ─────────────────────────────────────────────────────────────
   const fetchStats = async () => {
     setLoading(true);
     setError(null);
-
     try {
       const data = await getInventoryStats();
       setStats(data);
@@ -143,14 +146,8 @@ function InventoryStats() {
 
   useEffect(() => {
     fetchStats();
-    // Run once on mount — stats refresh when user triggers a CRUD action
-    // via the parent Inventory page calling a re-fetch.
   }, []);
 
-  /**
-   * Memoized card list — merges CARD_CONFIG (static) with live stats values.
-   * Only recomputes when `stats` object reference changes — not on every render.
-   */
   const cards = useMemo(() => {
     if (!stats) return [];
     return CARD_CONFIG.map((config) => ({
@@ -162,7 +159,7 @@ function InventoryStats() {
   // ── Render: Loading ────────────────────────────────────────────────────────
   if (loading) {
     return (
-      <div className="row g-3 mb-4" aria-busy="true" aria-label="Loading statistics">
+      <div className="row g-3 mb-4 inv-stats-row" aria-busy="true" aria-label="Loading statistics">
         {CARD_CONFIG.map((config) => (
           <StatCardSkeleton key={config.key} />
         ))}
@@ -173,11 +170,7 @@ function InventoryStats() {
   // ── Render: Error ──────────────────────────────────────────────────────────
   if (error) {
     return (
-      <div
-        className="inv-stats-error-wrap mb-4"
-        role="alert"
-        aria-live="assertive"
-      >
+      <div className="inv-stats-error-wrap mb-4" role="alert" aria-live="assertive">
         <div className="alert inv-alert-error d-flex align-items-center justify-content-between mb-0">
           <span>
             <FiXCircle size={16} className="me-2" aria-hidden="true" />
@@ -190,7 +183,7 @@ function InventoryStats() {
             aria-label="Retry loading statistics"
             id="inv-stats-retry-btn"
           >
-            <FiRefreshCw size={14} className="me-1" />
+            <FiRefreshCw size={13} className="me-1" />
             Retry
           </button>
         </div>
@@ -201,7 +194,7 @@ function InventoryStats() {
   // ── Render: Success ────────────────────────────────────────────────────────
   return (
     <div
-      className="row g-3 mb-4"
+      className="row g-3 mb-4 inv-stats-row"
       role="region"
       aria-label="Inventory summary statistics"
     >

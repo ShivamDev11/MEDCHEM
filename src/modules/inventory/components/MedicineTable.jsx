@@ -59,7 +59,7 @@ function MedicineTable({
   isLoading = false
 }) {
   
-  // ── Helper: Determine stock status based on quantities ─────────────────────
+  // ── Helper: Determine stock status ────────────────────────────────────────
   const getStockStatus = useCallback((quantity, minimumStock) => {
     const qty = Number(quantity) || 0;
     const min = Number(minimumStock) || 0;
@@ -69,7 +69,7 @@ function MedicineTable({
     return STOCK_STATUS.NORMAL;
   }, []);
 
-  // ── Helper: Check if medicine is expiring soon (within 30 days) ───────────
+  // ── Helper: Expiring soon ─────────────────────────────────────────────────
   const isExpiringSoon = useCallback((expiryDateStr) => {
     if (!expiryDateStr) return false;
     
@@ -85,7 +85,7 @@ function MedicineTable({
     return diffDays >= 0 && diffDays <= EXPIRY_WARNING_DAYS;
   }, []);
 
-  // ── Helper: Check if medicine is already expired ───────────────────────────
+  // ── Helper: Already expired ───────────────────────────────────────────────
   const isExpired = useCallback((expiryDateStr) => {
     if (!expiryDateStr) return false;
     
@@ -98,7 +98,7 @@ function MedicineTable({
     return expiry < today;
   }, []);
 
-  // ── Column Header Click Handler ────────────────────────────────────────────
+  // ── Column header click ────────────────────────────────────────────────────
   const handleHeaderClick = useCallback((columnKey, sortable) => {
     if (!sortable || isLoading) return;
     
@@ -110,7 +110,7 @@ function MedicineTable({
     onSortChange(columnKey, newDir);
   }, [sortField, sortDir, onSortChange, isLoading]);
 
-  // ── Render header columns ──────────────────────────────────────────────────
+  // ── Render headers ─────────────────────────────────────────────────────────
   const headers = useMemo(() => {
     return TABLE_COLUMNS.map((col) => {
       const isSorted = sortField === col.key;
@@ -128,9 +128,9 @@ function MedicineTable({
             {col.sortable && (
               <span className="inv-sort-icon-wrap">
                 {isSorted ? (
-                  sortDir === "asc" ? <FiChevronUp size={14} /> : <FiChevronDown size={14} />
+                  sortDir === "asc" ? <FiChevronUp size={13} /> : <FiChevronDown size={13} />
                 ) : (
-                  <FiChevronDown size={14} className="opacity-25" />
+                  <FiChevronDown size={13} className="opacity-25" />
                 )}
               </span>
             )}
@@ -140,14 +140,14 @@ function MedicineTable({
     });
   }, [sortField, sortDir, handleHeaderClick]);
 
-  // ── Render table rows ──────────────────────────────────────────────────────
+  // ── Render rows ────────────────────────────────────────────────────────────
   const rows = useMemo(() => {
     if (!medicines || medicines.length === 0) {
       return (
         <tr>
           <td colSpan={TABLE_COLUMNS.length} className="text-center py-5">
             <div className="inv-empty-table-state">
-              <p className="text-muted mb-0">No medicines available in this view.</p>
+              <p className="text-muted mb-0 small">No medicines match your current filters.</p>
             </div>
           </td>
         </tr>
@@ -161,7 +161,6 @@ function MedicineTable({
       const expired = isExpired(med.expiryDate);
       const expiringSoon = isExpiringSoon(med.expiryDate);
       
-      // Determine expiry styling helper
       let expiryLabelClass = "";
       let expiryWarningIcon = null;
       if (expired) {
@@ -175,9 +174,9 @@ function MedicineTable({
         expiryLabelClass = "text-warning fw-bold";
         expiryWarningIcon = (
           <FiAlertTriangle 
-            className="text-warning me-1 inv-warning-icon" 
+            className="text-warning me-1" 
             title="Expiring soon!" 
-            size={14} 
+            size={13} 
           />
         );
       }
@@ -190,27 +189,27 @@ function MedicineTable({
           </td>
           
           {/* Generic Name */}
-          <td className="text-muted inv-cell-generic">
+          <td className="text-muted inv-cell-generic" style={{ fontSize: "0.875rem" }}>
             {med.genericName || "—"}
           </td>
           
           {/* Category */}
           <td className="inv-cell-category">
-            <span className="badge bg-light text-dark border">{med.category}</span>
+            <span className="inv-cat-badge">{med.category}</span>
           </td>
           
           {/* Manufacturer */}
-          <td className="text-secondary inv-cell-manufacturer">
+          <td className="text-secondary inv-cell-manufacturer" style={{ fontSize: "0.875rem" }}>
             {med.manufacturer}
           </td>
           
           {/* Supplier */}
-          <td className="text-secondary inv-cell-supplier">
+          <td className="text-secondary inv-cell-supplier" style={{ fontSize: "0.875rem" }}>
             {med.supplier}
           </td>
           
           {/* Batch Number */}
-          <td className="font-monospace inv-cell-batch">
+          <td className="font-monospace inv-cell-batch" style={{ fontSize: "0.82rem" }}>
             {med.batchNumber}
           </td>
           
@@ -218,18 +217,18 @@ function MedicineTable({
           <td className={`inv-cell-expiry text-nowrap ${expiryLabelClass}`}>
             <div className="d-flex align-items-center">
               {expiryWarningIcon}
-              <span>{med.expiryDate}</span>
+              <span style={{ fontSize: "0.875rem" }}>{med.expiryDate}</span>
             </div>
           </td>
           
           {/* Quantity */}
-          <td className="text-end fw-medium inv-cell-qty">
+          <td className="text-end fw-semibold inv-cell-qty">
             {Number(med.quantity).toLocaleString()}
           </td>
           
           {/* Price */}
-          <td className="text-end fw-semibold text-dark inv-cell-price">
-            {Number(med.sellingPrice).toFixed(2)}
+          <td className="text-end fw-bold text-dark inv-cell-price">
+            ₹{Number(med.sellingPrice).toFixed(2)}
           </td>
           
           {/* Stock Status Badge */}
@@ -242,7 +241,6 @@ function MedicineTable({
           {/* Actions */}
           <td className="inv-cell-actions">
             <div className="d-flex align-items-center gap-1">
-              {/* View Details */}
               <button
                 type="button"
                 className="btn btn-sm inv-btn-icon inv-btn-view"
@@ -251,10 +249,9 @@ function MedicineTable({
                 title="View Details"
                 aria-label={`View details of ${med.medicineName}`}
               >
-                <FiEye size={15} />
+                <FiEye size={14} />
               </button>
               
-              {/* Edit */}
               <button
                 type="button"
                 className="btn btn-sm inv-btn-icon inv-btn-edit"
@@ -263,19 +260,18 @@ function MedicineTable({
                 title="Edit Medicine"
                 aria-label={`Edit ${med.medicineName}`}
               >
-                <FiEdit size={15} />
+                <FiEdit size={14} />
               </button>
               
-              {/* Delete */}
               <button
                 type="button"
                 className="btn btn-sm inv-btn-icon inv-btn-delete"
                 onClick={() => onDelete(med.id)}
                 disabled={isLoading}
-                title="Soft Delete Medicine"
+                title="Delete Medicine"
                 aria-label={`Delete ${med.medicineName}`}
               >
-                <FiTrash2 size={15} />
+                <FiTrash2 size={14} />
               </button>
             </div>
           </td>
@@ -287,7 +283,7 @@ function MedicineTable({
   return (
     <div className="inv-table-container card border-0 shadow-sm overflow-hidden mb-4">
       <div className="table-responsive">
-        <table className="table table-hover table-striped mb-0">
+        <table className="table table-hover mb-0">
           <thead className="table-light text-secondary">
             <tr>{headers}</tr>
           </thead>
@@ -297,9 +293,10 @@ function MedicineTable({
       
       {/* ── Pagination Footer ── */}
       {medicines && medicines.length > 0 && (
-        <div className="card-footer bg-white border-top d-flex align-items-center justify-content-between py-3 px-4">
-          <div className="text-muted small">
-            Page <strong>{currentPage}</strong>
+        <div className="inv-table-footer d-flex align-items-center justify-content-between">
+          <div className="text-muted small d-flex align-items-center gap-2">
+            Page{" "}
+            <span className="inv-page-indicator">{currentPage}</span>
           </div>
           <div className="d-flex gap-2">
             <button
@@ -309,7 +306,7 @@ function MedicineTable({
               disabled={currentPage === 1 || isLoading}
               aria-label="Previous Page"
             >
-              <FiChevronLeft size={16} />
+              <FiChevronLeft size={15} />
               <span>Previous</span>
             </button>
             <button
@@ -320,7 +317,7 @@ function MedicineTable({
               aria-label="Next Page"
             >
               <span>Next</span>
-              <FiChevronRight size={16} />
+              <FiChevronRight size={15} />
             </button>
           </div>
         </div>

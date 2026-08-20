@@ -54,37 +54,37 @@ const LoginForm = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit} noValidate>
+    <form onSubmit={handleSubmit} noValidate className="auth-form">
 
       {/* Email */}
       <div className="mb-3">
-        <label htmlFor="email" className="form-label fw-semibold">
+        <label htmlFor="email" className="form-label fw-semibold text-secondary" style={{ fontSize: "0.85rem" }}>
           Email Address
         </label>
         <input
           id="email"
           type="email"
-          className={`form-control form-control-lg ${errors.email ? "is-invalid" : ""}`}
-          placeholder="Enter your email"
+          className={`form-control auth-input ${errors.email ? "is-invalid" : ""}`}
+          placeholder="name@pharmacy.com"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           disabled={loading}
           autoComplete="email"
         />
-        {errors.email && <div className="invalid-feedback">{errors.email}</div>}
+        {errors.email && <div className="invalid-feedback small fw-medium mt-1">{errors.email}</div>}
       </div>
 
       {/* Password */}
       <div className="mb-4">
-        <label htmlFor="password" className="form-label fw-semibold">
+        <label htmlFor="password" className="form-label fw-semibold text-secondary" style={{ fontSize: "0.85rem" }}>
           Password
         </label>
-        <div className="input-group">
+        <div className="input-group auth-input-group">
           <input
             id="password"
             type={showPass ? "text" : "password"}
-            className={`form-control form-control-lg ${errors.password ? "is-invalid" : ""}`}
-            placeholder="Enter your password"
+            className={`form-control auth-input border-end-0 ${errors.password ? "is-invalid" : ""}`}
+            placeholder="Enter secure password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             disabled={loading}
@@ -92,7 +92,7 @@ const LoginForm = () => {
           />
           <button
             type="button"
-            className="btn btn-outline-secondary"
+            className={`btn auth-toggle-pass-btn ${errors.password ? "border-danger text-danger" : "border-start-0 text-muted"}`}
             onClick={() => setShowPass((prev) => !prev)}
             disabled={loading}
             tabIndex={-1}
@@ -100,25 +100,25 @@ const LoginForm = () => {
           >
             {showPass ? <FaEyeSlash /> : <FaEye />}
           </button>
-          {errors.password && <div className="invalid-feedback">{errors.password}</div>}
+          {errors.password && <div className="invalid-feedback small fw-medium mt-1">{errors.password}</div>}
         </div>
       </div>
 
       {/* Submit */}
       <button
         type="submit"
-        className="btn btn-primary btn-lg w-100"
+        className="btn auth-btn-submit w-100 d-flex align-items-center justify-content-center"
         disabled={loading}
       >
         {loading ? (
           <>
             <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true" />
-            Signing in...
+            <span>Verifying Credentials...</span>
           </>
         ) : (
           <>
             <FaSignInAlt className="me-2" />
-            Sign In
+            <span>Sign In to MedChem</span>
           </>
         )}
       </button>

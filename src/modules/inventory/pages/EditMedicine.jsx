@@ -101,15 +101,17 @@ function EditMedicine() {
   const errorState = error && (
     <div className="inv-empty-state text-center p-5 card border-0 shadow-sm">
       <div className="py-4">
-        <FiAlertTriangle size={48} className="text-warning mb-3" />
-        <h4 className="fw-bold text-dark">Record Unavailable</h4>
-        <p className="text-muted mb-4 max-w-sm mx-auto">{error}</p>
+        <div className="inv-empty-icon-wrap">
+          <FiAlertTriangle size={28} />
+        </div>
+        <h4 className="fw-bold text-dark mb-2">Record Unavailable</h4>
+        <p className="text-muted mb-4" style={{ maxWidth: "360px", margin: "0 auto 1.5rem" }}>{error}</p>
         <button
           type="button"
           className="btn inv-btn-secondary d-inline-flex align-items-center gap-2"
           onClick={() => navigate("/inventory")}
         >
-          <FiArrowLeft size={16} />
+          <FiArrowLeft size={15} />
           Back to Inventory
         </button>
       </div>
@@ -124,7 +126,7 @@ function EditMedicine() {
       {/* Page Header */}
       <InventoryHeader
         title={medicine ? `Edit: ${medicine.medicineName}` : "Edit Medicine"}
-        subtitle="Modify specifications and stock details for this inventory item."
+        subtitle="Update specifications and stock details for this inventory item."
         breadcrumbs={breadcrumbs}
       />
 
@@ -134,7 +136,7 @@ function EditMedicine() {
       ) : (
         <div className="row justify-content-center">
           <div className="col-12 col-xl-10">
-            <div className="card border-0 shadow-sm p-4 inv-form-container-card">
+            <div className="card border-0 shadow-sm inv-form-container-card">
               <MedicineForm
                 initialValues={medicine}
                 onSubmit={handleSubmit}

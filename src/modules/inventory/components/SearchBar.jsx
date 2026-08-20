@@ -45,12 +45,8 @@ function SearchBar({
 }) {
   const inputRef = useRef(null);
 
-  // ── Handlers (stable references via useCallback) ───────────────────────────
+  // ── Handlers ───────────────────────────────────────────────────────────────
 
-  /**
-   * Fires on every keystroke in the search input.
-   * Parent runs searchMedicines() against the in-memory medicine array.
-   */
   const handleTermChange = useCallback(
     (e) => {
       onSearchTermChange(e.target.value);
@@ -58,24 +54,15 @@ function SearchBar({
     [onSearchTermChange]
   );
 
-  /**
-   * Updates the active search field. Clears the current term so stale
-   * results from the previous field don't persist.
-   */
   const handleFieldChange = useCallback(
     (e) => {
       onSearchFieldChange(e.target.value);
-      // Clear term when switching field — prevents cross-field confusion
       onSearchTermChange("");
       inputRef.current?.focus();
     },
     [onSearchFieldChange, onSearchTermChange]
   );
 
-  /**
-   * Updates the active sort option. Parent re-fetches from Firestore
-   * with the new orderBy field + direction.
-   */
   const handleSortChange = useCallback(
     (e) => {
       onSortChange(e.target.value);
@@ -83,9 +70,6 @@ function SearchBar({
     [onSortChange]
   );
 
-  /**
-   * Clears the search term and refocuses the input.
-   */
   const handleClear = useCallback(() => {
     onSearchTermChange("");
     inputRef.current?.focus();
@@ -102,14 +86,14 @@ function SearchBar({
 
   return (
     <div className="inv-search-bar-wrapper mb-3">
-      {/* ── Top row: Field selector + Search input + Sort ────────────────── */}
-      <div className="row g-2 align-items-center">
+      {/* ── Unified toolbar row ────────────────────────────────────────── */}
+      <div className="d-flex align-items-center gap-2 flex-wrap">
 
-        {/* Field Selector Dropdown */}
-        <div className="col-12 col-sm-4 col-md-3 col-lg-2">
+        {/* Field Selector */}
+        <div style={{ minWidth: "150px", flex: "0 0 auto" }}>
           <div className="input-group inv-input-group">
             <span className="input-group-text inv-input-addon" aria-hidden="true">
-              <FiFilter size={14} />
+              <FiFilter size={13} />
             </span>
             <select
               id="inv-search-field-select"
@@ -129,11 +113,14 @@ function SearchBar({
           </div>
         </div>
 
+        {/* Vertical divider */}
+        <div className="inv-toolbar-divider d-none d-sm-block" aria-hidden="true" />
+
         {/* Search Input */}
-        <div className="col-12 col-sm-8 col-md-6 col-lg-7">
+        <div style={{ flex: "1 1 200px", minWidth: "180px" }}>
           <div className="input-group inv-input-group">
             <span className="input-group-text inv-input-addon" aria-hidden="true">
-              <FiSearch size={15} />
+              <FiSearch size={14} />
             </span>
             <input
               ref={inputRef}
@@ -148,7 +135,7 @@ function SearchBar({
               autoComplete="off"
               spellCheck="false"
             />
-            {/* Clear button — only visible when there is text */}
+            {/* Clear button */}
             {isFiltering && (
               <button
                 type="button"
@@ -159,17 +146,20 @@ function SearchBar({
                 aria-label="Clear search"
                 title="Clear search"
               >
-                <FiX size={15} />
+                <FiX size={14} />
               </button>
             )}
           </div>
         </div>
 
+        {/* Vertical divider */}
+        <div className="inv-toolbar-divider d-none d-md-block" aria-hidden="true" />
+
         {/* Sort Dropdown */}
-        <div className="col-12 col-sm-12 col-md-3 col-lg-3">
+        <div style={{ minWidth: "180px", flex: "0 0 auto" }}>
           <div className="input-group inv-input-group">
             <span className="input-group-text inv-input-addon" aria-hidden="true">
-              <FiSliders size={14} />
+              <FiSliders size={13} />
             </span>
             <select
               id="inv-sort-select"
@@ -190,7 +180,7 @@ function SearchBar({
         </div>
       </div>
 
-      {/* ── Bottom row: Result count summary ─────────────────────────────── */}
+      {/* ── Result count summary ───────────────────────────────────────── */}
       {showResultCount && (
         <div
           className="inv-search-result-summary mt-2"
@@ -204,13 +194,11 @@ function SearchBar({
             ) : (
               <>
                 Showing <strong>{resultCount}</strong> of{" "}
-                <strong>{totalCount}</strong> medicines
-                {" "}matching &ldquo;<strong>{searchTerm}</strong>&rdquo;
+                <strong>{totalCount}</strong> medicines matching &ldquo;<strong>{searchTerm}</strong>&rdquo;
               </>
             )}
           </span>
 
-          {/* Quick-clear link */}
           <button
             type="button"
             className="btn-link inv-clear-link ms-2"

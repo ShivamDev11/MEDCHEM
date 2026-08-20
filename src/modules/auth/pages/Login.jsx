@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { FiActivity } from "react-icons/fi";
 
 import LoginForm from "../components/LoginForm";
 import useAuth from "../hooks/useAuth";
@@ -22,8 +23,8 @@ const Login = () => {
 
         {/* Header */}
         <div className="auth-header text-center">
-          <div className="auth-logo mb-3">
-            <span className="auth-logo-icon">💊</span>
+          <div className="auth-logo-badge mb-3">
+            <FiActivity className="auth-logo-icon" />
           </div>
           <h1 className="auth-title">MedChem</h1>
           <p className="auth-subtitle">Smart Pharmacy Inventory System</p>
@@ -31,7 +32,7 @@ const Login = () => {
 
         {/* Body */}
         <div className="card-body px-4 py-4">
-          <h2 className="fs-5 fw-bold text-center mb-4 text-dark">
+          <h2 className="fs-6 fw-bold text-center mb-4 text-secondary text-uppercase tracking-wider">
             Sign in to your account
           </h2>
           <LoginForm />

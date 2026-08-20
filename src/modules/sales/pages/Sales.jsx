@@ -8,6 +8,7 @@ import Invoice from '../components/Invoice';
 import SalesHistory from '../components/SalesHistory';
 import { getSalesHistory, getInventoryMetrics } from '../services/salesService';
 import { playSale, playError } from '../../../shared/services/audioService';
+import "../sales.css";
 
 // ---------------------------------------------------------------------------
 // Helper: apply date filter to a list of sales documents
@@ -133,12 +134,12 @@ const Sales = () => {
   const [lastSaleDetails, setLastSaleDetails] = useState(null);
   const [lastSaleItems,   setLastSaleItems]   = useState([]);
 
-  // ── Data fetch (runs once on mount and whenever activeTab switches to history) ──
+  // ── Data fetch ──
   const fetchAllData = useCallback(async () => {
     setIsDataLoading(true);
     try {
       const [history, metrics] = await Promise.all([
-        getSalesHistory(500),   // generous limit; all filtering is client-side
+        getSalesHistory(500),
         getInventoryMetrics()
       ]);
       setAllSales(history);
@@ -158,7 +159,7 @@ const Sales = () => {
     if (error) showToast(error, 'danger');
   }, [error]);
 
-  // ── Helpers ───────────────────────────────────────────────────────────────
+  // ── Helpers ────────────────-----------------------------------------------
   const showToast = (message, type = 'success') => {
     if (type === 'danger' || type === 'error') {
       playError();
@@ -195,14 +196,13 @@ const Sales = () => {
       });
       setLastSaleItems(currentCart);
       setShowInvoice(true);
-      // Refresh raw data so the new sale appears in both cards and history
       fetchAllData();
     }
   };
 
-  // ── Render ─────────────────────────────────────────────────────────────────
+  // ── Render ────────────────-------------------------------------------------
   return (
-    <div className="container-fluid py-4">
+    <div className="container-fluid py-4 sales-page-animate">
       {/* Toast */}
       <div className="position-fixed top-0 end-0 p-3" style={{ zIndex: 1050 }}>
         <div
@@ -222,17 +222,17 @@ const Sales = () => {
       </div>
 
       {/* Header */}
-      <div className="d-flex justify-content-between align-items-center mb-4">
-        <h2 className="fw-bold text-primary mb-0">Sales Management</h2>
-        <div className="btn-group shadow-sm">
+      <div className="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+        <h2 className="fw-bold text-dark mb-0" style={{ letterSpacing: "-0.03em" }}>Sales Management</h2>
+        <div className="sales-tab-group shadow-sm">
           <button
-            className={`btn ${activeTab === 'pos' ? 'btn-primary' : 'btn-outline-primary'}`}
+            className={`sales-tab-btn ${activeTab === 'pos' ? 'active' : ''}`}
             onClick={() => setActiveTab('pos')}
           >
             Point of Sale
           </button>
           <button
-            className={`btn ${activeTab === 'history' ? 'btn-primary' : 'btn-outline-primary'}`}
+            className={`sales-tab-btn ${activeTab === 'history' ? 'active' : ''}`}
             onClick={() => setActiveTab('history')}
           >
             Sales History
@@ -240,7 +240,7 @@ const Sales = () => {
         </div>
       </div>
 
-      {/* Dashboard cards — always reflect the active filter */}
+      {/* Dashboard cards */}
       <SalesDashboardCards
         stats={stats}
         isLoading={isDataLoading}
@@ -249,12 +249,12 @@ const Sales = () => {
 
       {/* Main content */}
       {activeTab === 'pos' ? (
-        <div className="row">
-          <div className="col-lg-8">
+        <div className="row g-4">
+          <div className="col-12 col-xl-8">
             <SearchMedicine onSearch={handleSearch} onSelect={onSelectMedicine} />
             <SalesCart cart={cart} updateQuantity={updateQuantity} removeFromCart={removeFromCart} />
           </div>
-          <div className="col-lg-4">
+          <div className="col-12 col-xl-4">
             <SaleForm
               totals={totals}
               onCompleteSale={onCompleteSale}
@@ -264,7 +264,6 @@ const Sales = () => {
           </div>
         </div>
       ) : (
-        /* Pass shared state DOWN so SalesHistory never fetches independently */
         <SalesHistory
           allSales={allSales}
           isLoading={isDataLoading}

@@ -1,0 +1,184 @@
+/* ── Notifications Design Variables ────────────────────────────────────────── */
+:root {
+  --notif-primary:        #0ea5e9;
+  --notif-primary-dark:   #0284c7;
+  --notif-primary-light:  #e0f2fe;
+  --notif-success:        #10b981;
+  --notif-success-light:  #ecfdf5;
+  --notif-warning:        #f97316;
+  --notif-warning-light:  #fff7ed;
+  --notif-danger:         #ef4444;
+  --notif-danger-light:   #fef2f2;
+  --notif-surface:        #ffffff;
+  --notif-bg:             #f0f4f8;
+  --notif-border:         #e2e8f0;
+  --notif-border-light:   #f1f5f9;
+  --notif-text:           #0f172a;
+  --notif-text-secondary: #64748b;
+  --notif-radius:         16px;
+  --notif-radius-md:      12px;
+  --notif-radius-sm:      8px;
+  --notif-shadow-sm:      0 1px 3px rgba(0,0,0,0.05), 0 1px 2px rgba(0,0,0,0.03);
+  --notif-shadow:         0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.02);
+  --notif-transition:     all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ── Entrance Animation ───────────────────────────────────────────────────── */
+@keyframes notif-fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.notif-page-animate {
+  animation: notif-fade-in-up 0.4s ease both;
+}
+
+/* ── Filter Tabs ── */
+.notif-tab-group {
+  background: rgba(15, 23, 42, 0.05);
+  padding: 4px;
+  border-radius: var(--notif-radius-sm);
+  display: inline-flex;
+}
+
+.notif-tab-btn {
+  border: none;
+  background: transparent;
+  color: var(--notif-text-secondary);
+  font-weight: 600;
+  font-size: 0.85rem;
+  padding: 0.35rem 0.95rem;
+  border-radius: 6px;
+  transition: var(--notif-transition);
+  cursor: pointer;
+}
+
+.notif-tab-btn:hover {
+  color: var(--notif-text);
+}
+
+.notif-tab-btn.active {
+  background-color: var(--notif-surface);
+  color: var(--notif-primary-dark);
+  box-shadow: var(--notif-shadow-sm);
+}
+
+/* ── Notification List Cards ── */
+.notif-card {
+  background: var(--notif-surface);
+  border-radius: var(--notif-radius-md);
+  border: 1px solid var(--notif-border-light) !important;
+  box-shadow: var(--notif-shadow-sm);
+  transition: var(--notif-transition);
+  position: relative;
+  overflow: hidden;
+}
+
+.notif-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; bottom: 0;
+  width: 4px;
+}
+
+/* Status variants */
+.notif-unread {
+  background-color: var(--notif-surface);
+  border-color: var(--notif-border) !important;
+}
+
+.notif-unread:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--notif-shadow);
+}
+
+.notif-read {
+  background-color: var(--notif-border-light);
+  border-color: transparent !important;
+  opacity: 0.78;
+}
+
+/* Notification theme border highlights */
+.notif-type-low-stock::before { background: var(--notif-warning); }
+.notif-type-low-stock .notif-icon-wrap { background: var(--notif-warning-light); color: var(--notif-warning); }
+
+.notif-type-expiry::before    { background: var(--notif-danger); }
+.notif-type-expiry .notif-icon-wrap    { background: var(--notif-danger-light); color: var(--notif-danger); }
+
+.notif-type-sale::before      { background: var(--notif-success); }
+.notif-type-sale .notif-icon-wrap      { background: var(--notif-success-light); color: var(--notif-success); }
+
+.notif-type-default::before   { background: var(--notif-text-secondary); }
+.notif-type-default .notif-icon-wrap   { background: var(--notif-border-light); color: var(--notif-text-secondary); }
+
+/* Icon badge wrapper */
+.notif-icon-wrap {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--notif-radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+/* Read / Unread toggle buttons */
+.notif-toggle-btn {
+  font-weight: 600;
+  font-size: 0.78rem;
+  padding: 0.35rem 0.75rem;
+  border-radius: var(--notif-radius-sm);
+  transition: var(--notif-transition);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.notif-toggle-btn-unread {
+  background-color: var(--notif-primary-light);
+  border: 1px solid rgba(14, 165, 233, 0.15);
+  color: var(--notif-primary-dark);
+}
+
+.notif-toggle-btn-unread:hover {
+  background-color: var(--notif-primary);
+  color: #ffffff;
+  border-color: var(--notif-primary);
+}
+
+.notif-toggle-btn-read {
+  background-color: transparent;
+  border: 1px solid var(--notif-border);
+  color: var(--notif-text-secondary);
+}
+
+.notif-toggle-btn-read:hover {
+  background-color: var(--notif-border);
+  color: var(--notif-text);
+}
+
+/* ── Empty state dashed wrapper ── */
+.notif-empty-card {
+  background: var(--notif-surface);
+  border: 1px dashed var(--notif-border) !important;
+  border-radius: var(--notif-radius-md);
+}
+
+.notif-empty-icon-wrap {
+  width: 64px;
+  height: 64px;
+  background: var(--notif-border-light);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 1rem;
+  border: 1px solid var(--notif-border);
+  color: var(--notif-text-secondary);
+}

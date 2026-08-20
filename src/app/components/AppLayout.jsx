@@ -14,20 +14,16 @@ import { toast, ToastContainer } from "react-toastify";
 import { 
   FiLogOut, 
   FiBell, 
-  FiCheckCircle, 
   FiPackage, 
   FiClock, 
   FiDollarSign, 
-  FiCheck, 
-  FiCircle 
+  FiActivity
 } from "react-icons/fi";
 import { 
   collection, 
   query, 
   orderBy, 
-  onSnapshot, 
-  doc, 
-  updateDoc 
+  onSnapshot
 } from "firebase/firestore";
 
 import db from "../../firebase/firestore";
@@ -38,6 +34,7 @@ import {
 } from "../../modules/notifications/services/notificationService";
 import { playNotification, playError } from "../../../src/shared/services/audioService";
 import { NOTIFICATION_TYPES, SALES_COLLECTIONS } from "../../modules/sales/constants/salesConstants";
+import "./layout.css";
 
 // ── Time Helpers ─────────────────────────────────────────────────────────────
 const formatRelativeTime = (date) => {
@@ -181,49 +178,48 @@ function AppLayout() {
       {/* ── Top Navigation Bar ─────────────────────────────────────────── */}
       <nav className="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm py-2 sticky-top">
         <div className="container">
+          
           {/* Logo / Brand */}
           <span 
             className="navbar-brand fw-bold d-flex align-items-center gap-2 cursor-pointer"
             onClick={() => navigate("/dashboard")}
             style={{ cursor: "pointer" }}
           >
-            <span>💊</span> MedChem
+            <div className="lay-brand-badge" aria-hidden="true">
+              <FiActivity size={16} />
+            </div>
+            <span>MedChem</span>
           </span>
 
-          {/* Collapsible Tabs */}
-          <div className="navbar-nav flex-row gap-3 me-auto ms-4 d-none d-md-flex">
+          {/* Navigation Links */}
+          <div className="navbar-nav flex-row gap-2 me-auto ms-4 d-none d-md-flex">
             <span
               onClick={() => navigate("/dashboard")}
-              className={`nav-link px-2 cursor-pointer ${isActive("/dashboard") ? "active text-white fw-bold" : "text-white-50"}`}
-              style={{ cursor: "pointer" }}
+              className={`nav-link lay-nav-link ${isActive("/dashboard") ? "lay-active" : ""}`}
             >
               Dashboard
             </span>
             <span
               onClick={() => navigate("/inventory")}
-              className={`nav-link px-2 cursor-pointer ${isActive("/inventory") ? "active text-white fw-bold" : "text-white-50"}`}
-              style={{ cursor: "pointer" }}
+              className={`nav-link lay-nav-link ${isActive("/inventory") ? "lay-active" : ""}`}
             >
               Inventory
             </span>
             <span
               onClick={() => navigate("/sales")}
-              className={`nav-link px-2 cursor-pointer ${isActive("/sales") ? "active text-white fw-bold" : "text-white-50"}`}
-              style={{ cursor: "pointer" }}
+              className={`nav-link lay-nav-link ${isActive("/sales") ? "lay-active" : ""}`}
             >
               Sales
             </span>
             <span
               onClick={() => navigate("/expiry")}
-              className={`nav-link px-2 cursor-pointer ${isActive("/expiry") ? "active text-white fw-bold" : "text-white-50"}`}
-              style={{ cursor: "pointer" }}
+              className={`nav-link lay-nav-link ${isActive("/expiry") ? "lay-active" : ""}`}
             >
               Expiry Tracker
             </span>
             <span
               onClick={() => navigate("/reports")}
-              className={`nav-link px-2 cursor-pointer ${isActive("/reports") ? "active text-white fw-bold" : "text-white-50"}`}
-              style={{ cursor: "pointer" }}
+              className={`nav-link lay-nav-link ${isActive("/reports") ? "lay-active" : ""}`}
             >
               Reports
             </span>
@@ -235,16 +231,13 @@ function AppLayout() {
             <div className="position-relative" ref={dropdownRef}>
               <button
                 type="button"
-                className="btn btn-dark p-2 border-0 rounded-circle position-relative"
+                className="btn btn-dark p-2 border-0 rounded-circle position-relative d-flex align-items-center justify-content-center"
                 onClick={() => setShowDropdown(!showDropdown)}
                 aria-label="Notifications"
               >
-                <FiBell size={20} className="text-white-50 hover-text-white" />
+                <FiBell size={18} className="text-white-50 hover-text-white" />
                 {unreadCount > 0 && (
-                  <span 
-                    className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
-                    style={{ fontSize: "0.65rem", padding: "0.25em 0.5em" }}
-                  >
+                  <span className="position-absolute top-0 start-100 badge rounded-pill bg-danger lay-badge-notify">
                     {unreadCount}
                   </span>
                 )}
@@ -265,11 +258,12 @@ function AppLayout() {
                 >
                   {/* Dropdown Header */}
                   <div className="px-3 py-2 border-bottom d-flex justify-content-between align-items-center">
-                    <span className="fw-bold text-dark">Notifications</span>
+                    <span className="fw-bold text-dark" style={{ fontSize: "0.9rem" }}>Notifications</span>
                     {unreadCount > 0 && (
                       <button
                         type="button"
                         className="btn btn-link btn-sm p-0 text-decoration-none text-primary fw-semibold"
+                        style={{ fontSize: "0.8rem" }}
                         onClick={handleMarkAllRead}
                         disabled={isMarkingAll}
                       >
@@ -279,10 +273,10 @@ function AppLayout() {
                   </div>
 
                   {/* Notification List Scrollable Box */}
-                  <div style={{ overflowY: "auto", maxHeight: "350px" }} className="py-1">
+                  <div style={{ overflowY: "auto", maxHeight: "350px" }} className="py-1 dropdown-menu-scroll">
                     {notifications.length === 0 ? (
                       <div className="text-center py-4 text-muted small">
-                        <FiBell size={24} className="mb-2 text-muted opacity-50" />
+                        <FiBell size={22} className="mb-2 text-muted opacity-50" />
                         <p className="mb-0">No notifications yet.</p>
                       </div>
                     ) : (
@@ -296,13 +290,13 @@ function AppLayout() {
                             onClick={() => navigate(notif.type === NOTIFICATION_TYPES.EXPIRY ? "/expiry" : "/inventory")}
                           >
                             <div className={`p-1.5 rounded-circle me-1 mt-1 ${colorClass}`} style={{ padding: "6px", display: "inline-flex" }}>
-                              <Icon size={14} />
+                              <Icon size={13} />
                             </div>
                             <div className="flex-grow-1">
-                              <p className="mb-0 small text-dark fw-medium" style={{ lineHeight: "1.3" }}>
+                              <p className="mb-0 text-dark fw-medium" style={{ lineHeight: "1.3", fontSize: "0.85rem" }}>
                                 {notif.message}
                               </p>
-                              <div className="d-flex align-items-center gap-1.5 mt-1" style={{ fontSize: "0.75rem", color: "#6c757d" }}>
+                              <div className="d-flex align-items-center gap-1.5 mt-1" style={{ fontSize: "0.72rem", color: "#6c757d" }}>
                                 <span>{formatRelativeTime(notif.timestamp)}</span>
                                 <span>•</span>
                                 <span title={formatAbsoluteTime(notif.timestamp)}>
@@ -313,11 +307,11 @@ function AppLayout() {
                             {!notif.isRead && (
                               <button
                                 type="button"
-                                className="btn btn-link btn-sm p-0 mt-1 align-self-start text-primary"
+                                className="btn btn-link btn-sm p-0 mt-1 align-self-start border-0 text-primary d-flex align-items-center"
                                 onClick={(e) => handleToggleRead(notif, e)}
                                 title="Mark as Read"
                               >
-                                <FiCircle size={10} className="fill-primary" />
+                                <span className="lay-unread-dot" aria-hidden="true" />
                               </button>
                             )}
                           </div>
@@ -331,6 +325,7 @@ function AppLayout() {
                     <button
                       type="button"
                       className="btn btn-link btn-sm text-decoration-none w-100 fw-semibold text-primary"
+                      style={{ fontSize: "0.82rem" }}
                       onClick={handleViewAll}
                     >
                       View All Notifications
@@ -343,11 +338,11 @@ function AppLayout() {
             {/* Logout Button */}
             <button
               type="button"
-              className="btn btn-danger d-flex align-items-center gap-2"
+              className="btn lay-btn-logout d-flex align-items-center gap-2"
               onClick={handleLogout}
               aria-label="Logout"
             >
-              <FiLogOut />
+              <FiLogOut size={14} />
               <span className="d-none d-sm-inline">Logout</span>
             </button>
           </div>

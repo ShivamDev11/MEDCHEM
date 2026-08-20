@@ -13,12 +13,10 @@
 
 import { useState, useEffect, useCallback, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
-import { toast, ToastContainer } from "react-toastify";
-import { FiAlertTriangle, FiBell } from "react-icons/fi";
+import { FiAlertTriangle } from "react-icons/fi";
 import "react-toastify/dist/ReactToastify.css";
 
 import { getAllExpiredAndExpiring } from "../services/expiryService";
-import { generateExpiryNotifications } from "../../notifications/services/notificationService";
 import { EXPIRY_TOAST_MESSAGES } from "../constants/expiryConstants";
 import { playError } from "../../../shared/services/audioService";
 
@@ -27,21 +25,21 @@ import ExpiryCards from "../components/ExpiryCards";
 import ExpiryFilters from "../components/ExpiryFilters";
 import ExpiryTable from "../components/ExpiryTable";
 
-import "../../inventory/inventory.css";
+import "../expiry.css";
 
 function Expiry() {
   const navigate = useNavigate();
 
   // ── States ─────────────────────────────────────────────────────────────────
   const [medicines, setMedicines] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [loading, setLoading]     = useState(true);
+  const [error, setError]         = useState(null);
 
   // Filter/Sort States
-  const [filterTab, setFilterTab] = useState("ALL");
+  const [filterTab, setFilterTab]     = useState("ALL");
   const [searchField, setSearchField] = useState("medicineName");
-  const [searchTerm, setSearchTerm] = useState("");
-  const [sortValue, setSortValue] = useState("nearest"); // 'nearest' or 'latest'
+  const [searchTerm, setSearchTerm]   = useState("");
+  const [sortValue, setSortValue]     = useState("nearest");
 
   // ── Data Fetch ─────────────────────────────────────────────────────────────
   const fetchData = useCallback(async () => {
@@ -54,7 +52,6 @@ function Expiry() {
       console.error("[Expiry] Failed to fetch medicines:", err);
       playError();
       setError(EXPIRY_TOAST_MESSAGES.LOAD_ERROR);
-      toast.error(EXPIRY_TOAST_MESSAGES.LOAD_ERROR);
     } finally {
       setLoading(false);
     }
@@ -100,7 +97,6 @@ function Expiry() {
 
     // 3. Apply Sort
     result.sort((a, b) => {
-      // Days remaining sorting logic
       const valA = a.daysRemaining;
       const valB = b.daysRemaining;
       return sortValue === "nearest" ? valA - valB : valB - valA;
@@ -113,26 +109,22 @@ function Expiry() {
   const breadcrumbs = useMemo(() => [{ label: "Expiry Tracker" }], []);
 
   return (
-    <div className="container-fluid py-4 inv-page-container">
-      {/* Toast Notification Container */}
-      {/* ToastContainer is in main.jsx but can be repeated if isolated */}
+    <div className="container-fluid py-4 exp-page-animate">
       
       {/* Page Header */}
       <InventoryHeader
         title="Expiry Management"
-        subtitle="Track expiring medicines, check days remaining, and generate notifications."
+        subtitle="Track expiring medications, configure threshold warnings, and manage warehouse stock alerts."
         breadcrumbs={breadcrumbs}
       />
-
-
 
       {/* Error Panel */}
       {error && (
         <div className="alert inv-alert-error d-flex align-items-center mb-4">
-          <FiAlertTriangle size={24} className="text-danger me-3" />
+          <FiAlertTriangle size={20} className="text-danger me-3" />
           <div>
-            <h5 className="alert-heading fw-bold mb-1">Error</h5>
-            <p className="mb-0 small">{error}</p>
+            <h5 className="fw-bold mb-1" style={{ fontSize: "0.95rem" }}>Error</h5>
+            <p className="mb-0 small text-secondary">{error}</p>
           </div>
         </div>
       )}

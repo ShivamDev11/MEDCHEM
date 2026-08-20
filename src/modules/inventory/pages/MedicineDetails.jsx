@@ -25,7 +25,8 @@ import {
   FiAlertTriangle, 
   FiXCircle, 
   FiTruck, 
-  FiActivity 
+  FiActivity,
+  FiHash
 } from "react-icons/fi";
 
 import { getMedicineById } from "../services/inventoryService";
@@ -42,12 +43,11 @@ function MedicineDetails() {
   const { id } = useParams();
   const navigate = useNavigate();
 
-  // ── States ─────────────────────────────────────────────────────────────────
   const [medicine, setMedicine] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [loading, setLoading]   = useState(true);
+  const [error, setError]       = useState(null);
 
-  // ── Fetch Details ──────────────────────────────────────────────────────────
+  // ── Fetch ──────────────────────────────────────────────────────────────────
   const fetchDetails = useCallback(async () => {
     setLoading(true);
     setError(null);
@@ -67,43 +67,28 @@ function MedicineDetails() {
   }, [id]);
 
   useEffect(() => {
-    if (id) {
-      fetchDetails();
-    }
+    if (id) fetchDetails();
   }, [id, fetchDetails]);
 
-  // ── Helpers & Business Computations ────────────────────────────────────────
-
-  // Stock status determination
+  // ── Derived computations ───────────────────────────────────────────────────
   const stockStatus = useMemo(() => {
     if (!medicine) return { text: "", class: "" };
-    
     const qty = Number(medicine.quantity) || 0;
     const min = Number(medicine.minimumStock) || 0;
-    
     let text = STOCK_STATUS.NORMAL;
     if (qty === 0) text = STOCK_STATUS.OUT_OF_STOCK;
     else if (qty <= min) text = STOCK_STATUS.LOW;
-    
-    return {
-      text,
-      class: STOCK_STATUS_COLORS[text] || "bg-secondary"
-    };
+    return { text, class: STOCK_STATUS_COLORS[text] || "bg-secondary" };
   }, [medicine]);
 
-  // Expiry evaluation
   const expiryStatus = useMemo(() => {
     if (!medicine || !medicine.expiryDate) return { label: "Unknown", class: "text-muted", icon: FiXCircle };
-
     const today = new Date();
     today.setHours(0, 0, 0, 0);
-
     const expiry = new Date(medicine.expiryDate);
     expiry.setHours(0, 0, 0, 0);
-
     const diffTime = expiry - today;
     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-
     if (expiry < today) {
       return { label: "Expired", class: "text-danger fw-bold alert alert-danger border-0", icon: FiXCircle };
     }
@@ -113,89 +98,68 @@ function MedicineDetails() {
     return { label: "Good / Active", class: "text-success alert alert-success border-0", icon: FiCheckCircle };
   }, [medicine]);
 
-  // Business Analytics: Markup (₹) & Margin (%)
   const financialMetrics = useMemo(() => {
     if (!medicine) return { markup: 0, margin: 0 };
-    
     const buy  = Number(medicine.purchasePrice) || 0;
-    const sell = Number(medicine.sellingPrice) || 0;
-    
+    const sell = Number(medicine.sellingPrice)  || 0;
     if (buy <= 0) return { markup: sell, margin: 100 };
-    
     const markup = sell - buy;
     const margin = (markup / sell) * 100;
-    
-    return {
-      markup: markup.toFixed(2),
-      margin: margin.toFixed(1)
-    };
+    return { markup: markup.toFixed(2), margin: margin.toFixed(1) };
   }, [medicine]);
 
-  // Formatted date string parser (handles Firestore timestamps safely)
   const formatTimestamp = useCallback((timestampObj) => {
     if (!timestampObj) return "N/A";
-    
-    // Check if it is a Firestore Timestamp object with toDate()
     if (typeof timestampObj.toDate === "function") {
-      return timestampObj.toDate().toLocaleString("en-IN", {
-        dateStyle: "medium",
-        timeStyle: "short"
-      });
+      return timestampObj.toDate().toLocaleString("en-IN", { dateStyle: "medium", timeStyle: "short" });
     }
-    
-    // Check if ISO string or parseable string
     try {
       const date = new Date(timestampObj);
       if (!isNaN(date.getTime())) {
-        return date.toLocaleString("en-IN", {
-          dateStyle: "medium",
-          timeStyle: "short"
-        });
+        return date.toLocaleString("en-IN", { dateStyle: "medium", timeStyle: "short" });
       }
-    } catch {
-      // return raw value if parsing fails
-    }
-    
+    } catch { /* return raw */ }
     return String(timestampObj);
   }, []);
 
-  // ── Breadcrumb Structure ───────────────────────────────────────────────────
   const breadcrumbs = useMemo(() => [
     { label: "Inventory", path: "/inventory" },
     { label: "Medicine Details" }
   ], []);
 
-  // ── Render: Loading state ──────────────────────────────────────────────────
+  // ── Render: Loading ────────────────────────────────────────────────────────
   if (loading) {
     return (
       <div className="container-fluid py-4 inv-page-container" aria-busy="true">
         <InventoryHeader title="Loading Details..." breadcrumbs={breadcrumbs} />
-        <div className="inv-spinner-wrap text-center py-5">
-          <div className="spinner-border text-primary" role="status">
-            <span className="visually-hidden">Loading Record Details...</span>
-          </div>
-          <p className="text-muted mt-2 small">Fetching record specifications...</p>
+        <div className="inv-spinner-wrap">
+          <div className="inv-brand-spinner" role="status" aria-label="Loading record details" />
+          <p className="text-muted small mb-0">Fetching medicine record…</p>
         </div>
       </div>
     );
   }
 
-  // ── Render: Error state ────────────────────────────────────────────────────
+  // ── Render: Error ──────────────────────────────────────────────────────────
   if (error || !medicine) {
     return (
       <div className="container-fluid py-4 inv-page-container">
         <InventoryHeader title="Record Unavailable" breadcrumbs={breadcrumbs} />
         <div className="inv-empty-state text-center p-5 card border-0 shadow-sm">
           <div className="py-4">
-            <FiXCircle size={48} className="text-danger mb-3" />
-            <h4 className="fw-bold text-dark">Details Unavailable</h4>
-            <p className="text-muted mb-4 max-w-sm mx-auto">{error || "Could not resolve record details."}</p>
+            <div className="inv-empty-icon-wrap">
+              <FiXCircle size={30} />
+            </div>
+            <h4 className="fw-bold text-dark mb-2">Details Unavailable</h4>
+            <p className="text-muted mb-4" style={{ maxWidth: "360px", margin: "0 auto 1.5rem" }}>
+              {error || "Could not resolve record details."}
+            </p>
             <button
               type="button"
               className="btn inv-btn-secondary d-inline-flex align-items-center gap-2"
               onClick={() => navigate("/inventory")}
             >
-              <FiArrowLeft size={16} />
+              <FiArrowLeft size={15} />
               Back to Inventory
             </button>
           </div>
@@ -204,7 +168,7 @@ function MedicineDetails() {
     );
   }
 
-  // ── Render: Success state ──────────────────────────────────────────────────
+  // ── Render: Success ────────────────────────────────────────────────────────
   const ExpiryIcon = expiryStatus.icon;
 
   return (
@@ -212,136 +176,160 @@ function MedicineDetails() {
       {/* Page Header */}
       <InventoryHeader
         title={medicine.medicineName}
-        subtitle={medicine.genericName ? `Generic: ${medicine.genericName}` : "Medicine Details Page"}
+        subtitle={medicine.genericName ? `Generic: ${medicine.genericName}` : "Medicine Details"}
         breadcrumbs={breadcrumbs}
       />
 
-      <div className="row g-4 justify-content-center">
-        {/* Left Column: Visual Analytics & Details Panels */}
+      <div className="row g-4">
+        {/* ── Left Column ── */}
         <div className="col-12 col-lg-8">
-          
-          {/* Expiry Notification Alert Box */}
-          <div className={`d-flex align-items-center gap-2 py-2 px-3 mb-4 rounded ${expiryStatus.class}`}>
-            <ExpiryIcon size={20} className="flex-shrink-0" />
+
+          {/* Expiry Notification */}
+          <div className={`d-flex align-items-center gap-2 py-2 px-3 mb-4 rounded ${expiryStatus.class} inv-details-card-animate`}>
+            <ExpiryIcon size={18} className="flex-shrink-0" />
             <div>
-              <span className="fw-bold">Expiry Condition:</span> {expiryStatus.label}
+              <span className="fw-bold">Expiry Status:</span> {expiryStatus.label}
             </div>
           </div>
 
-          {/* Card Module: Specific Details */}
-          <div className="card border-0 shadow-sm mb-4 inv-details-card">
+          {/* Card: Technical Specifications */}
+          <div className="card border-0 shadow-sm mb-4 inv-details-card inv-details-card-animate">
             <div className="card-header bg-white border-bottom py-3 px-4 d-flex align-items-center gap-2">
-              <FiActivity className="text-primary" size={18} />
-              <h5 className="mb-0 fw-bold text-dark">Technical Specifications</h5>
+              <FiActivity className="text-primary" size={17} />
+              <h5 className="mb-0 fw-bold text-dark" style={{ fontSize: "1rem" }}>Technical Specifications</h5>
             </div>
             <div className="card-body p-4">
               <div className="row g-4">
+
                 <div className="col-12 col-sm-6">
                   <div className="inv-detail-item">
-                    <span className="inv-detail-label d-block text-muted small mb-1">Medicine Name</span>
-                    <strong className="inv-detail-value text-dark h5 mb-0 d-block">{medicine.medicineName}</strong>
+                    <span className="inv-detail-label">Medicine Name</span>
+                    <span className="inv-detail-value" style={{ fontSize: "1.05rem" }}>{medicine.medicineName}</span>
                   </div>
                 </div>
+
                 <div className="col-12 col-sm-6">
                   <div className="inv-detail-item">
-                    <span className="inv-detail-label d-block text-muted small mb-1">Generic Formulation</span>
-                    <span className="inv-detail-value text-dark fw-semibold">{medicine.genericName || "Not Specified"}</span>
+                    <span className="inv-detail-label">Generic Formulation</span>
+                    <span className="inv-detail-value">{medicine.genericName || "Not Specified"}</span>
                   </div>
                 </div>
+
                 <div className="col-12 col-sm-6">
                   <div className="inv-detail-item">
-                    <span className="inv-detail-label d-block text-muted small mb-1">Manufacturer</span>
-                    <span className="inv-detail-value text-dark fw-semibold">{medicine.manufacturer}</span>
+                    <span className="inv-detail-label">
+                      <FiTruck size={11} className="me-1" />Manufacturer
+                    </span>
+                    <span className="inv-detail-value">{medicine.manufacturer}</span>
                   </div>
                 </div>
+
                 <div className="col-12 col-sm-6">
                   <div className="inv-detail-item">
-                    <span className="inv-detail-label d-block text-muted small mb-1">Supplier</span>
-                    <span className="inv-detail-value text-dark fw-semibold">{medicine.supplier}</span>
+                    <span className="inv-detail-label">
+                      <FiTruck size={11} className="me-1" />Supplier
+                    </span>
+                    <span className="inv-detail-value">{medicine.supplier}</span>
                   </div>
                 </div>
+
                 <div className="col-12 col-sm-6">
-                  <div className="inv-detail-item flex-row d-flex gap-2">
-                    <div className="input-group-text bg-light border-0 rounded p-2"><FiTag size={16} className="text-secondary" /></div>
-                    <div>
-                      <span className="inv-detail-label d-block text-muted small">Category Group</span>
-                      <span className="badge bg-primary-subtle text-primary border border-primary-subtle">{medicine.category}</span>
-                    </div>
+                  <div className="inv-detail-item">
+                    <span className="inv-detail-label">
+                      <FiTag size={11} className="me-1" />Category
+                    </span>
+                    <span className="mt-1">
+                      <span className="badge bg-primary-subtle text-primary border border-primary-subtle px-3 py-1" style={{ fontSize: "0.82rem" }}>
+                        {medicine.category}
+                      </span>
+                    </span>
                   </div>
                 </div>
+
                 <div className="col-12 col-sm-6">
-                  <div className="inv-detail-item flex-row d-flex gap-2">
-                    <div className="input-group-text bg-light border-0 rounded p-2"><FiPackage size={16} className="text-secondary" /></div>
-                    <div>
-                      <span className="inv-detail-label d-block text-muted small">Batch Identifier</span>
-                      <span className="font-monospace fw-bold text-dark">{medicine.batchNumber}</span>
-                    </div>
+                  <div className="inv-detail-item">
+                    <span className="inv-detail-label">
+                      <FiHash size={11} className="me-1" />Batch Identifier
+                    </span>
+                    <span className="font-monospace fw-bold text-dark inv-detail-value">{medicine.batchNumber}</span>
                   </div>
                 </div>
+
+                <div className="col-12 col-sm-6">
+                  <div className="inv-detail-item">
+                    <span className="inv-detail-label">
+                      <FiCalendar size={11} className="me-1" />Expiry Date
+                    </span>
+                    <span className="inv-detail-value">{medicine.expiryDate}</span>
+                  </div>
+                </div>
+
               </div>
             </div>
           </div>
 
-          {/* Description Section */}
-          <div className="card border-0 shadow-sm mb-4 inv-details-card">
+          {/* Card: Description */}
+          <div className="card border-0 shadow-sm mb-4 inv-details-card inv-details-card-animate">
             <div className="card-header bg-white border-bottom py-3 px-4 d-flex align-items-center gap-2">
-              <FiFileText className="text-primary" size={18} />
-              <h5 className="mb-0 fw-bold text-dark">Dosage & Description Details</h5>
+              <FiFileText className="text-primary" size={17} />
+              <h5 className="mb-0 fw-bold text-dark" style={{ fontSize: "1rem" }}>Dosage & Description</h5>
             </div>
             <div className="card-body p-4">
-              <p className="text-secondary mb-0 leading-relaxed font-sans" style={{ whiteSpace: "pre-line" }}>
-                {medicine.description || "No dosage description or remarks provided for this record."}
+              <p className="text-secondary mb-0" style={{ whiteSpace: "pre-line", lineHeight: 1.7, fontSize: "0.925rem" }}>
+                {medicine.description || "No description or remarks provided for this record."}
               </p>
             </div>
           </div>
 
-          {/* Audit Trail Section */}
-          <div className="card border-0 shadow-sm mb-4 inv-details-card bg-light border">
+          {/* Card: Audit Trail */}
+          <div className="card border-0 shadow-sm mb-4 inv-details-card inv-details-card-animate" style={{ background: "var(--inv-bg-subtle)" }}>
             <div className="card-body p-4">
-              <h6 className="fw-bold text-dark mb-3 d-flex align-items-center gap-1">
-                <FiClock size={16} />
-                Audit Logs
+              <h6 className="fw-bold text-dark mb-3 d-flex align-items-center gap-2" style={{ fontSize: "0.85rem" }}>
+                <FiClock size={15} className="text-secondary" />
+                Audit Trail
               </h6>
-              <div className="row g-3 small text-secondary">
+              <div className="row g-3" style={{ fontSize: "0.835rem" }}>
                 <div className="col-12 col-sm-6">
-                  <div>Created On: <span className="text-dark fw-semibold">{formatTimestamp(medicine.createdAt)}</span></div>
-                  <div>Created By: <span className="text-dark fw-semibold font-monospace">{medicine.createdBy || "System"}</span></div>
+                  <div className="text-muted mb-1">Created On</div>
+                  <div className="text-dark fw-semibold">{formatTimestamp(medicine.createdAt)}</div>
+                  <div className="text-muted mt-2 mb-1">Created By</div>
+                  <div className="text-dark fw-semibold font-monospace">{medicine.createdBy || "System"}</div>
                 </div>
                 <div className="col-12 col-sm-6">
-                  <div>Last Updated: <span className="text-dark fw-semibold">{formatTimestamp(medicine.updatedAt)}</span></div>
-                  <div>Last Updated By: <span className="text-dark fw-semibold font-monospace">{medicine.updatedBy || "System"}</span></div>
+                  <div className="text-muted mb-1">Last Updated</div>
+                  <div className="text-dark fw-semibold">{formatTimestamp(medicine.updatedAt)}</div>
+                  <div className="text-muted mt-2 mb-1">Updated By</div>
+                  <div className="text-dark fw-semibold font-monospace">{medicine.updatedBy || "System"}</div>
                 </div>
               </div>
             </div>
           </div>
         </div>
 
-        {/* Right Column: Pricing & Quantity Statistics */}
+        {/* ── Right Column ── */}
         <div className="col-12 col-lg-4">
-          
-          {/* Card Module: Stock Tracker */}
-          <div className="card border-0 shadow-sm mb-4 text-center overflow-hidden">
-            <div className="card-header bg-white border-0 pt-4 pb-0">
-              <span className={`badge ${stockStatus.class} px-3 py-2 rounded-pill inv-status-pill`}>
+
+          {/* Card: Stock Tracker */}
+          <div className="card border-0 shadow-sm mb-4 text-center overflow-hidden inv-details-card-animate">
+            <div className="card-body py-4 px-4">
+              <span className={`badge ${stockStatus.class} px-3 py-2 rounded-pill inv-status-pill mb-3 d-inline-block`}>
                 {stockStatus.text}
               </span>
-            </div>
-            <div className="card-body py-4 px-4">
-              <div className="mb-2">
-                <span className="text-muted small d-block">Current Stock Count</span>
-                <span className="display-4 fw-extrabold text-dark tracking-tight">
+              <div className="mb-1">
+                <span className="text-muted small d-block mb-1">Current Stock Count</span>
+                <div className="fw-bold text-dark" style={{ fontSize: "2.5rem", letterSpacing: "-0.04em", lineHeight: 1 }}>
                   {Number(medicine.quantity).toLocaleString()}
-                </span>
-                <span className="text-muted ms-1">units</span>
+                </div>
+                <span className="text-muted" style={{ fontSize: "0.85rem" }}>units</span>
               </div>
-              <div className="border-top my-3 pt-3 text-start small text-secondary">
-                <div className="d-flex justify-content-between mb-1">
-                  <span>Minimum Alert Limit:</span>
+              <div className="border-top mt-3 pt-3 text-start" style={{ fontSize: "0.83rem" }}>
+                <div className="d-flex justify-content-between mb-2">
+                  <span className="text-muted">Minimum Alert Limit</span>
                   <span className="fw-bold text-dark">{Number(medicine.minimumStock).toLocaleString()} units</span>
                 </div>
                 <div className="d-flex justify-content-between">
-                  <span>Restock Action Required:</span>
-                  <span className={Number(medicine.quantity) <= Number(medicine.minimumStock) ? "text-danger fw-bold" : "text-success fw-bold"}>
+                  <span className="text-muted">Restock Required</span>
+                  <span className={`fw-bold ${Number(medicine.quantity) <= Number(medicine.minimumStock) ? "text-danger" : "text-success"}`}>
                     {Number(medicine.quantity) <= Number(medicine.minimumStock) ? "YES" : "NO"}
                   </span>
                 </div>
@@ -349,38 +337,39 @@ function MedicineDetails() {
             </div>
           </div>
 
-          {/* Card Module: Pricing & Profit Margins */}
-          <div className="card border-0 shadow-sm mb-4">
+          {/* Card: Pricing Analytics */}
+          <div className="card border-0 shadow-sm mb-4 inv-details-card inv-details-card-animate">
             <div className="card-header bg-white border-bottom py-3 px-4 d-flex align-items-center gap-2">
-              <FiDollarSign className="text-primary" size={18} />
-              <h5 className="mb-0 fw-bold text-dark">Pricing Analytics</h5>
+              <FiDollarSign className="text-primary" size={17} />
+              <h5 className="mb-0 fw-bold text-dark" style={{ fontSize: "1rem" }}>Pricing Analytics</h5>
             </div>
             <div className="card-body p-4">
-              <div className="mb-4">
-                <div className="row g-2">
-                  <div className="col-6 text-center border-end">
-                    <span className="text-muted small d-block">Purchase Price</span>
-                    <h4 className="fw-bold text-dark mb-0">₹{Number(medicine.purchasePrice).toFixed(2)}</h4>
-                  </div>
-                  <div className="col-6 text-center">
-                    <span className="text-muted small d-block">Selling Price</span>
-                    <h4 className="fw-bold text-primary mb-0">₹{Number(medicine.sellingPrice).toFixed(2)}</h4>
-                  </div>
+              {/* Price comparison */}
+              <div className="row g-0 mb-4 text-center">
+                <div className="col-6 border-end">
+                  <div className="text-muted small mb-1">Purchase Price</div>
+                  <div className="fw-bold text-dark" style={{ fontSize: "1.35rem" }}>₹{Number(medicine.purchasePrice).toFixed(2)}</div>
+                </div>
+                <div className="col-6">
+                  <div className="text-muted small mb-1">Selling Price</div>
+                  <div className="fw-bold text-primary" style={{ fontSize: "1.35rem" }}>₹{Number(medicine.sellingPrice).toFixed(2)}</div>
                 </div>
               </div>
-              
-              {/* Derived Financial Analytics */}
-              <div className="p-3 bg-light rounded border">
-                <h6 className="fw-bold text-dark mb-3 d-flex align-items-center gap-1 justify-content-center">
-                  <FiActivity size={14} className="text-success" />
-                  Estimated Margin Details
-                </h6>
-                <div className="d-flex justify-content-between mb-2">
-                  <span className="text-muted small">Markup (Profit / Unit):</span>
+
+              {/* Margin details */}
+              <div className="p-3 rounded" style={{ background: "var(--inv-bg-subtle)", border: "1px solid var(--inv-border-light)" }}>
+                <div className="text-center mb-3">
+                  <span className="fw-bold text-dark" style={{ fontSize: "0.8rem", textTransform: "uppercase", letterSpacing: "0.05em" }}>
+                    <FiActivity size={13} className="me-1 text-success" />
+                    Estimated Margins
+                  </span>
+                </div>
+                <div className="d-flex justify-content-between mb-2" style={{ fontSize: "0.83rem" }}>
+                  <span className="text-muted">Markup per unit</span>
                   <span className="text-success fw-bold">₹{financialMetrics.markup}</span>
                 </div>
-                <div className="d-flex justify-content-between align-items-center">
-                  <span className="text-muted small">Gross Profit Margin:</span>
+                <div className="d-flex justify-content-between align-items-center" style={{ fontSize: "0.83rem" }}>
+                  <span className="text-muted">Gross Profit Margin</span>
                   <span className="badge bg-success text-white px-2 py-1 fw-bold">
                     {financialMetrics.margin}%
                   </span>
@@ -389,22 +378,22 @@ function MedicineDetails() {
             </div>
           </div>
 
-          {/* Action buttons */}
+          {/* Action Buttons */}
           <div className="d-flex flex-column gap-2 mb-4">
             <button
               type="button"
-              className="btn btn-outline-primary d-flex align-items-center justify-content-center gap-2 py-2 fw-semibold"
+              className="btn inv-btn-primary d-flex align-items-center justify-content-center gap-2 py-2"
               onClick={() => navigate(`/inventory/edit/${medicine.id}`)}
             >
-              <FiEdit size={16} />
+              <FiEdit size={15} />
               Edit Specifications
             </button>
             <button
               type="button"
-              className="btn btn-secondary d-flex align-items-center justify-content-center gap-2 py-2 fw-semibold"
+              className="btn inv-btn-secondary d-flex align-items-center justify-content-center gap-2 py-2"
               onClick={() => navigate("/inventory")}
             >
-              <FiArrowLeft size={16} />
+              <FiArrowLeft size={15} />
               Back to Inventory
             </button>
           </div>

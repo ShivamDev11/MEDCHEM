@@ -1,0 +1,143 @@
+/* ── Layout Design Variables ────────────────────────────────────────────── */
+:root {
+  --lay-primary:        #0ea5e9;
+  --lay-primary-dark:   #0284c7;
+  --lay-primary-light:  #e0f2fe;
+  --lay-bg-dark:        #0f172a;
+  --lay-border:         #cbd5e1;
+  --lay-border-light:   #e2e8f0;
+  --lay-text-muted:     #64748b;
+  --lay-radius:         12px;
+  --lay-radius-sm:      8px;
+  --lay-shadow:         0 10px 30px -5px rgba(0, 0, 0, 0.1), 0 8px 15px -8px rgba(0, 0, 0, 0.06);
+  --lay-transition:     all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ── Custom Scrollbar ── */
+.dropdown-menu-scroll::-webkit-scrollbar {
+  width: 6px;
+}
+.dropdown-menu-scroll::-webkit-scrollbar-track {
+  background: #f8fafc;
+}
+.dropdown-menu-scroll::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 3px;
+}
+.dropdown-menu-scroll::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+/* ── Navigation active states ── */
+.lay-nav-link {
+  color: rgba(255, 255, 255, 0.6) !important;
+  font-weight: 500;
+  font-size: 0.9rem;
+  padding: 0.4rem 0.8rem !important;
+  border-radius: var(--lay-radius-sm);
+  transition: var(--lay-transition);
+  cursor: pointer;
+}
+
+.lay-nav-link:hover {
+  color: #ffffff !important;
+  background-color: rgba(255, 255, 255, 0.08);
+}
+
+.lay-nav-link.lay-active {
+  color: #ffffff !important;
+  background-color: rgba(255, 255, 255, 0.15);
+  font-weight: 700;
+  box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.1);
+}
+
+/* ── Notification Bell Badge Pulse ── */
+@keyframes lay-pulse-badge {
+  0% { transform: translate(100%, -50%) scale(1); }
+  50% { transform: translate(100%, -50%) scale(1.2); }
+  100% { transform: translate(100%, -50%) scale(1); }
+}
+
+.lay-badge-notify {
+  font-size: 0.68rem;
+  padding: 0.22em 0.55em;
+  font-weight: 800;
+  border: 1.5px solid var(--lay-bg-dark);
+  animation: lay-pulse-badge 2s infinite ease-in-out;
+}
+
+/* ── Dropdown custom popover ── */
+@keyframes lay-fade-in-down {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.dropdown-menu-custom {
+  background-color: #ffffff;
+  border: 1px solid var(--lay-border-light) !important;
+  box-shadow: var(--lay-shadow) !important;
+  border-radius: var(--lay-radius) !important;
+  animation: lay-fade-in-down 0.2s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.dropdown-item-custom {
+  transition: var(--lay-transition);
+  border-bottom: 1px solid #f1f5f9;
+  padding: 0.75rem 1rem !important;
+}
+
+.dropdown-item-custom:hover {
+  background-color: #f8fafc !important;
+}
+
+.dropdown-item-custom:last-child {
+  border-bottom: none;
+}
+
+/* Unread notification status indicator dot */
+.lay-unread-dot {
+  width: 8px;
+  height: 8px;
+  background-color: var(--lay-primary);
+  border-radius: 50%;
+  display: inline-block;
+  flex-shrink: 0;
+  box-shadow: 0 0 0 2px rgba(14, 165, 233, 0.2);
+}
+
+/* Brand icon bubble inside navbar */
+.lay-brand-badge {
+  width: 32px;
+  height: 32px;
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--lay-primary);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+/* Logout button styling */
+.lay-btn-logout {
+  font-weight: 600;
+  font-size: 0.85rem;
+  padding: 0.4rem 0.9rem;
+  border-radius: var(--lay-radius-sm);
+  background-color: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.2);
+  color: #f87171;
+  transition: var(--lay-transition);
+}
+
+.lay-btn-logout:hover {
+  background-color: #ef4444;
+  color: #ffffff;
+  border-color: #ef4444;
+}

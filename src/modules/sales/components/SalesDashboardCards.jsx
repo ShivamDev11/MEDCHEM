@@ -1,13 +1,19 @@
 import React from 'react';
-import { FaRupeeSign, FaShoppingCart, FaBoxOpen, FaExclamationTriangle, FaTimesCircle } from 'react-icons/fa';
+import { 
+  FiShoppingCart, 
+  FiDollarSign, 
+  FiPackage, 
+  FiAlertTriangle, 
+  FiXCircle 
+} from 'react-icons/fi';
 
 const SalesDashboardCards = ({ stats, isLoading, filterLabel = "Today's" }) => {
   if (isLoading) {
     return (
-      <div className="row mb-4">
+      <div className="row g-3 mb-4">
         {[...Array(5)].map((_, i) => (
-          <div key={i} className="col-md-2 col-sm-6 mb-3 flex-grow-1">
-            <div className="card shadow-sm h-100 border-0 bg-light">
+          <div key={i} className="col-6 col-md col-lg">
+            <div className="card border-0 shadow-sm bg-light" style={{ height: "96px" }}>
               <div className="card-body d-flex align-items-center justify-content-center">
                 <div className="spinner-border text-primary spinner-border-sm" role="status">
                   <span className="visually-hidden">Loading...</span>
@@ -31,53 +37,52 @@ const SalesDashboardCards = ({ stats, isLoading, filterLabel = "Today's" }) => {
   const cards = [
     {
       title: `${filterLabel} Sales`,
-      value: todaySales,
-      icon: <FaShoppingCart className="fs-1 text-primary opacity-50" />,
-      bg: "border-primary",
-      text: "text-primary"
+      value: todaySales.toLocaleString(),
+      icon: <FiShoppingCart size={20} />,
+      kpiClass: "sales-kpi-blue"
     },
     {
       title: `${filterLabel} Revenue`,
-      value: `₹${todayRevenue.toFixed(2)}`,
-      icon: <FaRupeeSign className="fs-1 text-success opacity-50" />,
-      bg: "border-success",
-      text: "text-success"
+      value: `₹${todayRevenue.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`,
+      icon: <FiDollarSign size={20} />,
+      kpiClass: "sales-kpi-green"
     },
     {
       title: "Items Sold",
-      value: totalItemsSold,
-      icon: <FaBoxOpen className="fs-1 text-info opacity-50" />,
-      bg: "border-info",
-      text: "text-info"
+      value: totalItemsSold.toLocaleString(),
+      icon: <FiPackage size={20} />,
+      kpiClass: "sales-kpi-info"
     },
     {
       title: "Low Stock",
-      value: lowStockCount,
-      icon: <FaExclamationTriangle className="fs-1 text-warning opacity-50" />,
-      bg: "border-warning",
-      text: "text-warning"
+      value: lowStockCount.toLocaleString(),
+      icon: <FiAlertTriangle size={20} />,
+      kpiClass: "sales-kpi-orange"
     },
     {
       title: "Expired",
-      value: expiredCount,
-      icon: <FaTimesCircle className="fs-1 text-danger opacity-50" />,
-      bg: "border-danger",
-      text: "text-danger"
+      value: expiredCount.toLocaleString(),
+      icon: <FiXCircle size={20} />,
+      kpiClass: "sales-kpi-red"
     }
   ];
 
   return (
-    <div className="row mb-4">
+    <div className="row g-3 mb-4">
       {cards.map((card, index) => (
-        <div key={index} className="col-md-2 col-sm-6 mb-3 flex-grow-1">
-          <div className={`card shadow-sm h-100 border-start border-4 ${card.bg}`}>
-            <div className="card-body">
-              <div className="d-flex justify-content-between align-items-center">
-                <div>
-                  <h6 className="text-muted mb-1 text-uppercase small fw-bold">{card.title}</h6>
-                  <h3 className={`mb-0 fw-bold ${card.text}`}>{card.value}</h3>
-                </div>
-                <div>{card.icon}</div>
+        <div key={index} className="col-6 col-md col-lg">
+          <div className={`sales-kpi-card ${card.kpiClass}`}>
+            <div className="d-flex align-items-center justify-content-between">
+              <div>
+                <h6 className="text-muted mb-1 text-uppercase small fw-bold" style={{ fontSize: "0.7rem", letterSpacing: "0.05em" }}>
+                  {card.title}
+                </h6>
+                <h4 className="mb-0 fw-bold text-dark" style={{ letterSpacing: "-0.03em" }}>
+                  {card.value}
+                </h4>
+              </div>
+              <div className="sales-kpi-icon-wrap">
+                {card.icon}
               </div>
             </div>
           </div>

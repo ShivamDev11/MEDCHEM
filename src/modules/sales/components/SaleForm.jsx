@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { FiCheckCircle, FiUser, FiCreditCard } from 'react-icons/fi';
 import { PAYMENT_METHODS, DEFAULT_PAYMENT_METHOD } from '../constants/salesConstants';
 
 const SaleForm = ({ totals, onCompleteSale, isProcessing, cartLength }) => {
@@ -15,103 +16,148 @@ const SaleForm = ({ totals, onCompleteSale, isProcessing, cartLength }) => {
   const confirmSale = () => {
     setShowConfirm(false);
     onCompleteSale(paymentMethod, customerName);
-    // Reset form after attempting (the parent will clear cart if successful)
     setCustomerName('');
     setPaymentMethod(DEFAULT_PAYMENT_METHOD);
   };
 
   return (
-    <div className="card shadow-sm mb-4">
-      <div className="card-body">
-        <h5 className="card-title text-primary mb-4 border-bottom pb-2">Sale Summary & Checkout</h5>
+    <div className="card sales-checkout-card border-0 mb-4">
+      <div className="card-body p-4">
+        <h5 className="card-title text-dark fw-bold mb-4 pb-2 border-bottom" style={{ fontSize: "1.05rem" }}>
+          Sale Summary & Checkout
+        </h5>
         
-        <div className="row mb-4">
-          <div className="col-6">
-            <p className="text-muted mb-1">Subtotal:</p>
-            <h5 className="mb-0">₹{totals.subtotal.toFixed(2)}</h5>
-          </div>
-          <div className="col-6 text-end">
-            <p className="text-muted mb-1">Discount:</p>
-            <h5 className="mb-0 text-success">-₹{totals.discountAmount.toFixed(2)}</h5>
-          </div>
+        {/* Financial calculations */}
+        <div className="sales-summary-row mb-3">
+          <span className="sales-summary-label">Subtotal</span>
+          <span className="sales-summary-val text-dark">₹{totals.subtotal.toFixed(2)}</span>
         </div>
-
-        <div className="row mb-4">
-          <div className="col-6">
-            <p className="text-muted mb-1">Tax:</p>
-            <h5 className="mb-0 text-danger">+₹{totals.taxAmount.toFixed(2)}</h5>
-          </div>
-          <div className="col-6 text-end">
-            <p className="text-muted mb-1">Grand Total:</p>
-            <h3 className="mb-0 text-primary fw-bold">₹{totals.grandTotal.toFixed(2)}</h3>
-          </div>
+        <div className="sales-summary-row mb-3">
+          <span className="sales-summary-label">Discount</span>
+          <span className="sales-summary-val text-success">-₹{totals.discountAmount.toFixed(2)}</span>
+        </div>
+        <div className="sales-summary-row mb-3">
+          <span className="sales-summary-label">Tax Amount</span>
+          <span className="sales-summary-val text-danger">+₹{totals.taxAmount.toFixed(2)}</span>
+        </div>
+        
+        <div className="sales-summary-divider" />
+        
+        <div className="sales-summary-row mb-4">
+          <span className="fw-bold text-dark" style={{ fontSize: "0.95rem" }}>Grand Total</span>
+          <span className="fw-extrabold text-primary" style={{ fontSize: "1.5rem", letterSpacing: "-0.02em" }}>
+            ₹{totals.grandTotal.toFixed(2)}
+          </span>
         </div>
 
         <form onSubmit={handleSubmit}>
+          {/* Customer Name */}
           <div className="mb-3">
-            <label className="form-label text-muted small fw-bold">Customer Name (Optional)</label>
-            <input 
-              type="text" 
-              className="form-control" 
-              placeholder="Enter customer name"
-              value={customerName}
-              onChange={(e) => setCustomerName(e.target.value)}
-              disabled={isProcessing || cartLength === 0}
-            />
+            <label className="form-label text-secondary fw-semibold mb-1" style={{ fontSize: "0.82rem" }}>
+              Customer Name <span className="text-muted fw-normal">(Optional)</span>
+            </label>
+            <div className="input-group sales-search-input-group" style={{ background: "#f8fafc" }}>
+              <span className="input-group-text border-0 bg-transparent text-muted pe-1">
+                <FiUser size={14} />
+              </span>
+              <input 
+                type="text" 
+                className="form-control sales-search-input py-2" 
+                placeholder="Walk-in Customer"
+                value={customerName}
+                onChange={(e) => setCustomerName(e.target.value)}
+                disabled={isProcessing || cartLength === 0}
+              />
+            </div>
           </div>
 
+          {/* Payment Method */}
           <div className="mb-4">
-            <label className="form-label text-muted small fw-bold">Payment Method</label>
-            <select 
-              className="form-select"
-              value={paymentMethod}
-              onChange={(e) => setPaymentMethod(e.target.value)}
-              disabled={isProcessing || cartLength === 0}
-            >
-              {Object.values(PAYMENT_METHODS).map(method => (
-                <option key={method} value={method}>{method}</option>
-              ))}
-            </select>
+            <label className="form-label text-secondary fw-semibold mb-1" style={{ fontSize: "0.82rem" }}>
+              Payment Method
+            </label>
+            <div className="input-group sales-search-input-group" style={{ background: "#f8fafc" }}>
+              <span className="input-group-text border-0 bg-transparent text-muted pe-1">
+                <FiCreditCard size={14} />
+              </span>
+              <select 
+                className="form-select sales-search-input py-2"
+                value={paymentMethod}
+                onChange={(e) => setPaymentMethod(e.target.value)}
+                disabled={isProcessing || cartLength === 0}
+                style={{ cursor: "pointer" }}
+              >
+                {Object.values(PAYMENT_METHODS).map(method => (
+                  <option key={method} value={method}>{method}</option>
+                ))}
+              </select>
+            </div>
           </div>
 
           <button 
             type="submit" 
-            className="btn btn-primary w-100 py-3 fw-bold fs-5 shadow-sm"
+            className="btn inv-btn-primary w-100 py-2.5 fw-bold d-flex align-items-center justify-content-center gap-2"
             disabled={isProcessing || cartLength === 0}
+            style={{ fontSize: "0.95rem" }}
           >
             {isProcessing ? (
               <>
-                <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
-                Processing Sale...
+                <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                <span>Processing Sale...</span>
               </>
             ) : (
-              'Complete Sale'
+              <>
+                <FiCheckCircle size={16} />
+                <span>Complete Sale</span>
+              </>
             )}
           </button>
         </form>
       </div>
 
-      {/* Bootstrap Modal for Confirmation */}
+      {/* Confirmation Modal */}
       {showConfirm && (
-        <div className="modal d-block" tabIndex="-1" style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}>
-          <div className="modal-dialog modal-dialog-centered">
-            <div className="modal-content border-0 shadow">
-              <div className="modal-header bg-primary text-white border-0">
-                <h5 className="modal-title fw-bold">Confirm Sale</h5>
-                <button type="button" className="btn-close btn-close-white" onClick={() => setShowConfirm(false)}></button>
-              </div>
-              <div className="modal-body py-4">
-                <p className="fs-5 text-center mb-0">
-                  Are you sure you want to complete this sale for 
-                  <strong className="text-primary d-block mt-2 fs-2">₹{totals.grandTotal.toFixed(2)}</strong>
-                </p>
-                <div className="text-center mt-3 text-muted">
-                  <small>Payment Method: <strong>{paymentMethod}</strong></small>
+        <div className="modal d-block" tabIndex="-1" style={{ backgroundColor: 'rgba(15,23,42,0.45)' }}>
+          <div className="modal-dialog modal-dialog-centered" style={{ maxWidth: "400px" }}>
+            <div className="modal-content border-0 shadow-lg" style={{ borderRadius: "14px" }}>
+              <div className="modal-body p-4 text-center">
+                <div className="d-flex justify-content-center mb-3">
+                  <div className="p-3 bg-primary-subtle text-primary rounded-circle" style={{ width: "56px", height: "56px", display: "flex", alignItems: "center", justify: "center" }}>
+                    <FiCheckCircle size={28} />
+                  </div>
                 </div>
-              </div>
-              <div className="modal-footer border-0 bg-light">
-                <button type="button" className="btn btn-secondary px-4" onClick={() => setShowConfirm(false)}>Cancel</button>
-                <button type="button" className="btn btn-primary px-4 fw-bold" onClick={confirmSale}>Confirm & Print</button>
+                <h5 className="fw-bold text-dark mb-2">Confirm Sale Transaction</h5>
+                <p className="text-secondary small mb-4">
+                  Please confirm to deduct stock items and complete the transaction.
+                </p>
+                <div className="p-3 bg-light rounded border text-start mb-4" style={{ fontSize: "0.85rem" }}>
+                  <div className="d-flex justify-content-between mb-1.5">
+                    <span className="text-muted">Total Due:</span>
+                    <strong className="text-dark">₹{totals.grandTotal.toFixed(2)}</strong>
+                  </div>
+                  <div className="d-flex justify-content-between">
+                    <span className="text-muted">Payment:</span>
+                    <strong className="text-dark">{paymentMethod}</strong>
+                  </div>
+                </div>
+                <div className="d-flex gap-2">
+                  <button 
+                    type="button" 
+                    className="btn btn-light border w-100 fw-bold py-2" 
+                    onClick={() => setShowConfirm(false)}
+                    style={{ fontSize: "0.875rem" }}
+                  >
+                    Cancel
+                  </button>
+                  <button 
+                    type="button" 
+                    className="btn inv-btn-primary w-100 fw-bold py-2" 
+                    onClick={confirmSale}
+                    style={{ fontSize: "0.875rem" }}
+                  >
+                    Confirm & Print
+                  </button>
+                </div>
               </div>
             </div>
           </div>

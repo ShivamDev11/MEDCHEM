@@ -53,7 +53,7 @@ const buildRange = (preset) => {
 };
 
 function DateFilter({ onFilterChange }) {
-  const [active, setActive]         = useState(DEFAULT_DATE_FILTER);
+  const [active, setActive]           = useState(DEFAULT_DATE_FILTER);
   const [customStart, setCustomStart] = useState('');
   const [customEnd,   setCustomEnd]   = useState('');
   const [customError, setCustomError] = useState('');
@@ -82,67 +82,66 @@ function DateFilter({ onFilterChange }) {
   };
 
   return (
-    <div className="card border-0 shadow-sm mb-4">
-      <div className="card-body p-3">
-        <div className="d-flex flex-wrap align-items-center gap-2">
-          {/* Preset Buttons */}
-          {DATE_FILTERS.filter((f) => f.value !== 'custom').map((filter) => (
-            <button
-              key={filter.value}
-              type="button"
-              className={`btn btn-sm ${
-                active === filter.value ? 'btn-dark' : 'btn-outline-secondary'
-              }`}
-              onClick={() => handlePreset(filter.value)}
-            >
-              {filter.label}
-            </button>
-          ))}
+    <div className="rp-filter-card">
+      <div className="d-flex flex-wrap align-items-center gap-2">
+        {/* Preset Buttons */}
+        {DATE_FILTERS.filter((f) => f.value !== 'custom').map((filter) => (
+          <button
+            key={filter.value}
+            type="button"
+            className={`rp-filter-btn ${active === filter.value ? 'active' : ''}`}
+            onClick={() => handlePreset(filter.value)}
+          >
+            {filter.label}
+          </button>
+        ))}
 
-          {/* Custom Range Toggle */}
+        {/* Custom Range Toggle */}
+        <button
+          type="button"
+          className={`rp-filter-btn ${active === 'custom' ? 'active' : ''}`}
+          onClick={() => handlePreset('custom')}
+        >
+          Custom Range
+        </button>
+      </div>
+
+      {/* Custom Date Inputs — shown only when 'custom' is active */}
+      {active === 'custom' && (
+        <div className="d-flex flex-wrap align-items-end gap-2 mt-3 pt-3 border-top" style={{ borderColor: 'rgba(0,0,0,0.06)' }}>
+          <div>
+            <label className="form-label mb-1" style={{ fontSize: '0.72rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.06em', color: '#6b7280' }}>From</label>
+            <input
+              type="date"
+              className="form-control form-control-sm"
+              style={{ borderRadius: '8px', fontSize: '0.82rem' }}
+              value={customStart}
+              onChange={(e) => setCustomStart(e.target.value)}
+            />
+          </div>
+          <div>
+            <label className="form-label mb-1" style={{ fontSize: '0.72rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.06em', color: '#6b7280' }}>To</label>
+            <input
+              type="date"
+              className="form-control form-control-sm"
+              style={{ borderRadius: '8px', fontSize: '0.82rem' }}
+              value={customEnd}
+              onChange={(e) => setCustomEnd(e.target.value)}
+            />
+          </div>
           <button
             type="button"
-            className={`btn btn-sm ${active === 'custom' ? 'btn-dark' : 'btn-outline-secondary'}`}
-            onClick={() => handlePreset('custom')}
+            className="btn btn-sm btn-primary"
+            style={{ borderRadius: '8px', fontWeight: 600, fontSize: '0.8rem', padding: '6px 18px' }}
+            onClick={handleCustomApply}
           >
-            Custom Range
+            Apply
           </button>
+          {customError && (
+            <span className="text-danger align-self-center" style={{ fontSize: '0.78rem' }}>{customError}</span>
+          )}
         </div>
-
-        {/* Custom Date Inputs — shown only when 'custom' is active */}
-        {active === 'custom' && (
-          <div className="d-flex flex-wrap align-items-end gap-2 mt-3">
-            <div>
-              <label className="form-label small mb-1 text-muted">From</label>
-              <input
-                type="date"
-                className="form-control form-control-sm"
-                value={customStart}
-                onChange={(e) => setCustomStart(e.target.value)}
-              />
-            </div>
-            <div>
-              <label className="form-label small mb-1 text-muted">To</label>
-              <input
-                type="date"
-                className="form-control form-control-sm"
-                value={customEnd}
-                onChange={(e) => setCustomEnd(e.target.value)}
-              />
-            </div>
-            <button
-              type="button"
-              className="btn btn-sm btn-primary"
-              onClick={handleCustomApply}
-            >
-              Apply
-            </button>
-            {customError && (
-              <span className="text-danger small align-self-center">{customError}</span>
-            )}
-          </div>
-        )}
-      </div>
+      )}
     </div>
   );
 }

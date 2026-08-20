@@ -69,14 +69,14 @@ function AddMedicine() {
       {/* Page Header */}
       <InventoryHeader
         title="Add New Medicine"
-        subtitle="Insert detailed information to catalog a new pharmaceutical item."
+        subtitle="Fill in the form below to add a new pharmaceutical item to your inventory."
         breadcrumbs={breadcrumbs}
       />
 
       {/* Form Container Wrapper */}
       <div className="row justify-content-center">
         <div className="col-12 col-xl-10">
-          <div className="card border-0 shadow-sm p-4 inv-form-container-card">
+          <div className="card border-0 shadow-sm inv-form-container-card">
             <MedicineForm
               initialValues={FORM_DEFAULT_VALUES}
               onSubmit={handleSubmit}

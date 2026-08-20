@@ -11,7 +11,7 @@
 
 import { useCallback } from "react";
 import { useNavigate } from "react-router-dom";
-import { FiHome, FiChevronRight, FiPlus } from "react-icons/fi";
+import { FiHome, FiChevronRight, FiPlus, FiGrid } from "react-icons/fi";
 
 /**
  * InventoryHeader
@@ -31,7 +31,6 @@ function InventoryHeader({ title, subtitle, breadcrumbs = [], actionButton }) {
 
   /**
    * Stable navigation handler.
-   * useCallback prevents unnecessary re-renders in parent that passes this down.
    */
   const handleActionClick = useCallback(() => {
     if (actionButton?.path) {
@@ -52,7 +51,7 @@ function InventoryHeader({ title, subtitle, breadcrumbs = [], actionButton }) {
               role="button"
               aria-label="Go to Dashboard"
             >
-              <FiHome size={13} className="me-1" />
+              <FiHome size={12} className="me-1" />
               Dashboard
             </span>
           </li>
@@ -68,7 +67,7 @@ function InventoryHeader({ title, subtitle, breadcrumbs = [], actionButton }) {
                 }`}
                 aria-current={isLast ? "page" : undefined}
               >
-                <FiChevronRight size={12} className="inv-crumb-separator me-1" />
+                <FiChevronRight size={11} className="inv-crumb-separator me-1" />
                 {isLast || !crumb.path ? (
                   <span className="inv-breadcrumb-active">{crumb.label}</span>
                 ) : (
@@ -88,11 +87,16 @@ function InventoryHeader({ title, subtitle, breadcrumbs = [], actionButton }) {
 
       {/* ── Title Row ───────────────────────────────────────────────────── */}
       <div className="inv-header-row">
-        {/* Left: Title + subtitle */}
+        {/* Left: Icon + Title + subtitle */}
         <div className="inv-header-title-block">
-          <h1 className="inv-page-title">{title}</h1>
+          <div className="inv-title-block">
+            <div className="inv-page-title-icon" aria-hidden="true">
+              <FiGrid size={18} />
+            </div>
+            <h1 className="inv-page-title mb-0">{title}</h1>
+          </div>
           {subtitle && (
-            <p className="inv-page-subtitle mb-0">{subtitle}</p>
+            <p className="inv-page-subtitle mb-0 mt-1">{subtitle}</p>
           )}
         </div>
 
@@ -107,7 +111,7 @@ function InventoryHeader({ title, subtitle, breadcrumbs = [], actionButton }) {
               disabled={actionButton.disabled || false}
               aria-label={actionButton.label}
             >
-              <FiPlus size={18} />
+              <FiPlus size={17} />
               <span>{actionButton.label}</span>
             </button>
           </div>

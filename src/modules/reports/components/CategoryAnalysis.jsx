@@ -2,28 +2,46 @@
  * @file        CategoryAnalysis.jsx
  * @module      Reports
  * @purpose     Medicine category breakdown — count and stock per category.
- *              Pure Bootstrap progress bars, no chart library.
+ *              Pure CSS progress bars, no chart library.
  */
 
-// Bootstrap badge colors cycled per category
-const BADGE_COLORS = [
-  'primary', 'success', 'info', 'warning', 'danger',
-  'secondary', 'dark', 'primary', 'success', 'info',
+// Gradient bar class cycled per category
+const BAR_CLASSES = [
+  'rp-bar-primary', 'rp-bar-success', 'rp-bar-info',
+  'rp-bar-warning', 'rp-bar-danger',  'rp-bar-secondary',
+  'rp-bar-dark',    'rp-bar-primary', 'rp-bar-success', 'rp-bar-info',
+];
+
+// Matching soft badge colours
+const BADGE_STYLES = [
+  { bg: 'rgba(59,130,246,0.08)',   color: '#2563eb' },
+  { bg: 'rgba(16,185,129,0.08)',   color: '#059669' },
+  { bg: 'rgba(6,182,212,0.08)',    color: '#0891b2' },
+  { bg: 'rgba(245,158,11,0.08)',   color: '#d97706' },
+  { bg: 'rgba(239,68,68,0.08)',    color: '#dc2626' },
+  { bg: 'rgba(107,114,128,0.08)',  color: '#4b5563' },
+  { bg: 'rgba(55,65,81,0.08)',     color: '#374151' },
+  { bg: 'rgba(59,130,246,0.08)',   color: '#2563eb' },
+  { bg: 'rgba(16,185,129,0.08)',   color: '#059669' },
+  { bg: 'rgba(6,182,212,0.08)',    color: '#0891b2' },
 ];
 
 function CategoryAnalysis({ categoryData, loading }) {
   if (loading) {
     return (
-      <div className="card border-0 shadow-sm mb-4">
-        <div className="card-body p-4">
-          <h6 className="fw-bold mb-3">Category Analysis</h6>
+      <div className="rp-card mb-4">
+        <div className="rp-card-body">
+          <p className="rp-card-title mb-1">Category Analysis</p>
+          <p className="rp-card-subtitle mb-4">Inventory stock distribution</p>
           {[...Array(5)].map((_, i) => (
-            <div key={i} className="mb-3">
-              <div className="d-flex justify-content-between mb-1">
-                <span className="placeholder col-4 rounded" />
-                <span className="placeholder col-2 rounded" />
+            <div key={i} className="rp-progress-row">
+              <div className="rp-progress-label-row">
+                <span className="placeholder rounded" style={{ width: '90px', height: '12px', display: 'inline-block' }} />
+                <span className="placeholder rounded" style={{ width: '50px', height: '12px', display: 'inline-block' }} />
               </div>
-              <div className="placeholder col-12 rounded" style={{ height: '10px' }} />
+              <div className="rp-progress">
+                <div className="placeholder rp-progress-bar" style={{ width: `${40 + i * 10}%`, background: '#e5e7eb' }} />
+              </div>
             </div>
           ))}
         </div>
@@ -33,55 +51,63 @@ function CategoryAnalysis({ categoryData, loading }) {
 
   if (!categoryData || categoryData.length === 0) {
     return (
-      <div className="card border-0 shadow-sm mb-4">
-        <div className="card-body p-4 text-center text-muted">
-          <h6 className="fw-bold mb-2">Category Analysis</h6>
-          <p className="mb-0 small">No inventory data available.</p>
+      <div className="rp-card mb-4">
+        <div className="rp-card-body rp-empty">
+          <div className="rp-empty-icon">📦</div>
+          <p className="rp-card-title mb-1">Category Analysis</p>
+          <p className="rp-empty-text mb-0">No inventory data available.</p>
         </div>
       </div>
     );
   }
 
-  const maxStock     = Math.max(...categoryData.map((c) => c.stock), 1);
-  const totalMeds    = categoryData.reduce((s, c) => s + c.count, 0);
-  const totalStock   = categoryData.reduce((s, c) => s + c.stock, 0);
+  const maxStock   = Math.max(...categoryData.map((c) => c.stock), 1);
+  const totalMeds  = categoryData.reduce((s, c) => s + c.count, 0);
+  const totalStock = categoryData.reduce((s, c) => s + c.stock, 0);
 
   return (
-    <div className="card border-0 shadow-sm mb-4">
-      <div className="card-body p-4">
-        <div className="d-flex justify-content-between align-items-center mb-3">
-          <div>
-            <h6 className="fw-bold mb-0">Category Analysis</h6>
-            <p className="text-muted small mb-0">
-              {categoryData.length} categories · {totalMeds} medicines · {totalStock} units
-            </p>
-          </div>
+    <div className="rp-card mb-4">
+      <div className="rp-card-body">
+        {/* Header */}
+        <div className="mb-4">
+          <p className="rp-card-title mb-0">Category Analysis</p>
+          <p className="rp-card-subtitle">
+            {categoryData.length} categories · {totalMeds} medicines · {totalStock} units
+          </p>
         </div>
 
+        {/* Progress rows */}
         {categoryData.map((cat, i) => {
-          const pct   = Math.round((cat.stock / maxStock) * 100);
-          const color = BADGE_COLORS[i % BADGE_COLORS.length];
+          const pct      = Math.round((cat.stock / maxStock) * 100);
+          const barClass = BAR_CLASSES[i % BAR_CLASSES.length];
+          const badge    = BADGE_STYLES[i % BADGE_STYLES.length];
 
           return (
-            <div key={cat.category} className="mb-3">
-              {/* Label row */}
-              <div className="d-flex justify-content-between align-items-center mb-1">
-                <div className="d-flex align-items-center gap-2">
-                  <span className={`badge bg-${color} rounded-pill`} style={{ fontSize: '0.7rem' }}>
+            <div key={cat.category} className="rp-progress-row">
+              <div className="rp-progress-label-row">
+                <span className="rp-progress-name">
+                  <span
+                    style={{
+                      background: badge.bg,
+                      color: badge.color,
+                      borderRadius: '99px',
+                      padding: '2px 9px',
+                      fontSize: '0.7rem',
+                      fontWeight: 700,
+                    }}
+                  >
                     {cat.category}
                   </span>
-                  <span className="text-muted small">
+                  <span className="rp-progress-meta">
                     {cat.count} medicine{cat.count !== 1 ? 's' : ''}
                   </span>
-                </div>
-                <span className="fw-semibold small">{cat.stock} units</span>
+                </span>
+                <span className="rp-progress-value">{cat.stock} units</span>
               </div>
-
-              {/* Progress bar */}
-              <div className="progress" style={{ height: '8px' }}>
+              <div className="rp-progress">
                 <div
-                  className={`progress-bar bg-${color}`}
-                  style={{ width: `${pct}%`, transition: 'width 0.5s ease' }}
+                  className={`rp-progress-bar ${barClass}`}
+                  style={{ width: `${pct}%` }}
                   role="progressbar"
                   aria-valuenow={pct}
                   aria-valuemin="0"
@@ -92,18 +118,22 @@ function CategoryAnalysis({ categoryData, loading }) {
           );
         })}
 
-        {/* Summary badges */}
-        <div className="d-flex flex-wrap gap-2 mt-3 pt-2 border-top">
+        {/* Summary badge pills */}
+        <div className="d-flex flex-wrap gap-2 mt-4 pt-3 border-top" style={{ borderColor: 'rgba(0,0,0,0.06)' }}>
           {categoryData.map((cat, i) => {
-            const color = BADGE_COLORS[i % BADGE_COLORS.length];
-            const pct   = totalStock > 0
-              ? Math.round((cat.stock / totalStock) * 100)
-              : 0;
+            const badge  = BADGE_STYLES[i % BADGE_STYLES.length];
+            const pct    = totalStock > 0 ? Math.round((cat.stock / totalStock) * 100) : 0;
             return (
               <span
                 key={cat.category}
-                className={`badge bg-${color} bg-opacity-10 text-${color} border border-${color} border-opacity-25 rounded-pill px-2 py-1`}
-                style={{ fontSize: '0.72rem' }}
+                style={{
+                  background: badge.bg,
+                  color: badge.color,
+                  borderRadius: '99px',
+                  padding: '3px 10px',
+                  fontSize: '0.7rem',
+                  fontWeight: 600,
+                }}
               >
                 {cat.category}: {pct}%
               </span>

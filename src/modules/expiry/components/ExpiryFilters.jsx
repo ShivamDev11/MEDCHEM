@@ -3,7 +3,7 @@
  * @module      Expiry
  * @purpose     Controls for filtering and sorting the expiry table.
  *              Includes search input, field selector, sort dropdown, and filter tabs.
- * @dependencies react, react-icons, expiryConstants, inventory.css
+ * @dependencies react, react-icons, expiryConstants, expiry.css
  * @exports     ExpiryFilters (default)
  */
 
@@ -17,19 +17,6 @@ import {
 
 /**
  * ExpiryFilters
- *
- * @param {object}   props
- * @param {string}   props.searchTerm           - Current search input value
- * @param {Function} props.onSearchTermChange   - Called with new string on every keystroke
- * @param {string}   props.searchField          - Currently selected field key
- * @param {Function} props.onSearchFieldChange  - Called with new field key
- * @param {string}   props.sortValue            - Current sort option value
- * @param {Function} props.onSortChange         - Called with new sort option
- * @param {string}   props.filterTab            - Current filter tab value
- * @param {Function} props.onFilterTabChange    - Called with new filter tab value
- * @param {number}   props.resultCount          - Filtered result count
- * @param {number}   props.totalCount           - Total unfiltered count
- * @param {boolean}  props.disabled             - Disables all controls
  */
 function ExpiryFilters({
   searchTerm,
@@ -78,31 +65,33 @@ function ExpiryFilters({
     "Medicine Name";
 
   return (
-    <div className="inv-search-bar-wrapper mb-3">
-      {/* ── Top row: Filter Tabs ─────────────────────────────────────────── */}
-      <div className="mb-3 d-flex flex-wrap gap-2">
-        {EXPIRY_FILTER_TABS.map((tab) => (
-          <button
-            key={tab.value}
-            type="button"
-            className={`btn btn-sm ${
-              filterTab === tab.value ? "btn-primary" : "btn-outline-primary"
-            }`}
-            onClick={() => onFilterTabChange(tab.value)}
-            disabled={disabled}
-          >
-            {tab.label}
-          </button>
-        ))}
-      </div>
+    <div className="exp-toolbar-card mb-3">
+      {/* ── Toolbar Flex Container ── */}
+      <div className="d-flex align-items-center gap-3 flex-wrap">
+        
+        {/* Filter Tabs */}
+        <div className="exp-tab-group">
+          {EXPIRY_FILTER_TABS.map((tab) => (
+            <button
+              key={tab.value}
+              type="button"
+              className={`exp-tab-btn ${filterTab === tab.value ? "active" : ""}`}
+              onClick={() => onFilterTabChange(tab.value)}
+              disabled={disabled}
+            >
+              {tab.label}
+            </button>
+          ))}
+        </div>
 
-      {/* ── Middle row: Field selector + Search input + Sort ─────────────── */}
-      <div className="row g-2 align-items-center">
+        {/* Vertical divider */}
+        <div className="exp-divider d-none d-lg-block" aria-hidden="true" />
+
         {/* Field Selector */}
-        <div className="col-12 col-sm-4 col-md-3 col-lg-2">
+        <div style={{ minWidth: "150px" }}>
           <div className="input-group inv-input-group">
             <span className="input-group-text inv-input-addon">
-              <FiFilter size={14} />
+              <FiFilter size={13} />
             </span>
             <select
               className="form-select inv-select"
@@ -110,6 +99,7 @@ function ExpiryFilters({
               onChange={handleFieldChange}
               disabled={disabled}
               aria-label="Select field to search by"
+              style={{ cursor: "pointer" }}
             >
               {EXPIRY_SEARCH_FIELDS.map((field) => (
                 <option key={field.value} value={field.value}>
@@ -121,10 +111,10 @@ function ExpiryFilters({
         </div>
 
         {/* Search Input */}
-        <div className="col-12 col-sm-8 col-md-6 col-lg-7">
+        <div style={{ flex: "1 1 200px" }}>
           <div className="input-group inv-input-group">
             <span className="input-group-text inv-input-addon">
-              <FiSearch size={15} />
+              <FiSearch size={14} />
             </span>
             <input
               ref={inputRef}
@@ -145,17 +135,20 @@ function ExpiryFilters({
                 disabled={disabled}
                 title="Clear search"
               >
-                <FiX size={15} />
+                <FiX size={14} />
               </button>
             )}
           </div>
         </div>
 
+        {/* Vertical divider */}
+        <div className="exp-divider d-none d-md-block" aria-hidden="true" />
+
         {/* Sort Dropdown */}
-        <div className="col-12 col-sm-12 col-md-3 col-lg-3">
+        <div style={{ minWidth: "160px" }}>
           <div className="input-group inv-input-group">
             <span className="input-group-text inv-input-addon">
-              <FiSliders size={14} />
+              <FiSliders size={13} />
             </span>
             <select
               className="form-select inv-select"
@@ -163,6 +156,7 @@ function ExpiryFilters({
               onChange={handleSortChange}
               disabled={disabled}
               aria-label="Sort medicines"
+              style={{ cursor: "pointer" }}
             >
               {EXPIRY_SORT_OPTIONS.map((option) => (
                 <option key={option.value} value={option.value}>
@@ -174,7 +168,7 @@ function ExpiryFilters({
         </div>
       </div>
 
-      {/* ── Bottom row: Result count summary ─────────────────────────────── */}
+      {/* ── Result count summary ───────────────────────────────────────── */}
       {(isFiltering || filterTab !== "ALL") && (
         <div className="inv-search-result-summary mt-2" role="status">
           <span className="inv-result-pill">

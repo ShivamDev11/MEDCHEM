@@ -4,7 +4,7 @@
  * @purpose     Renders 5 summary stat cards at the top of the Expiry page.
  *              Calculates counts locally from the provided medicines array.
  *              Zero extra Firestore reads.
- * @dependencies react, react-icons, inventory.css
+ * @dependencies react, react-icons, expiry.css
  * @exports     ExpiryCards (default)
  */
 
@@ -17,49 +17,48 @@ import {
   FiPackage,
 } from "react-icons/fi";
 
-// ─────────────────────────────────────────────────────────────────────────────
-// CARD CONFIG
-// ─────────────────────────────────────────────────────────────────────────────
 const CARD_CONFIG = [
   {
     key: "expired",
-    label: "Expired",
+    label: "Expired Items",
+    hint: "High critical risk",
     icon: FiAlertOctagon,
-    colorClass: "inv-stat-red",
+    kpiClass: "exp-kpi-red",
   },
   {
     key: "days30",
-    label: "30 Days",
+    label: "Expiring 30 Days",
+    hint: "Critical status",
     icon: FiAlertTriangle,
-    colorClass: "inv-stat-orange",
+    kpiClass: "exp-kpi-orange",
   },
   {
     key: "days60",
-    label: "60 Days",
+    label: "Expiring 60 Days",
+    hint: "Warning status",
     icon: FiClock,
-    colorClass: "inv-stat-yellow",
+    kpiClass: "exp-kpi-yellow",
   },
   {
     key: "days90",
-    label: "90 Days",
+    label: "Expiring 90 Days",
+    hint: "Upcoming alert",
     icon: FiCalendar,
-    colorClass: "inv-stat-indigo",
+    kpiClass: "exp-kpi-indigo",
   },
   {
     key: "total",
     label: "Total Monitored",
+    hint: "Active batch count",
     icon: FiPackage,
-    colorClass: "inv-stat-blue",
+    kpiClass: "exp-kpi-blue",
   },
 ];
 
-// ─────────────────────────────────────────────────────────────────────────────
-// LOADING SKELETON
-// ─────────────────────────────────────────────────────────────────────────────
 function StatCardSkeleton() {
   return (
     <div className="col-6 col-sm-6 col-md-4 col-lg-2-4">
-      <div className="inv-stat-card inv-stat-skeleton">
+      <div className="exp-kpi-card inv-stat-skeleton">
         <div className="inv-skeleton-icon" />
         <div className="inv-skeleton-value" />
         <div className="inv-skeleton-label" />
@@ -68,18 +67,14 @@ function StatCardSkeleton() {
   );
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
-// MAIN COMPONENT
-// ─────────────────────────────────────────────────────────────────────────────
 function ExpiryCards({ medicines, loading }) {
-  // Compute stats in one pass
   const stats = useMemo(() => {
     if (!medicines) return null;
 
     let expired = 0;
-    let days30 = 0;
-    let days60 = 0;
-    let days90 = 0;
+    let days30  = 0;
+    let days60  = 0;
+    let days90  = 0;
 
     medicines.forEach((med) => {
       const days = med.daysRemaining;
@@ -110,16 +105,23 @@ function ExpiryCards({ medicines, loading }) {
 
   return (
     <div className="row g-3 mb-4">
-      {CARD_CONFIG.map(({ key, label, icon: Icon, colorClass }) => (
+      {CARD_CONFIG.map(({ key, label, hint, icon: Icon, kpiClass }) => (
         <div key={key} className="col-6 col-sm-6 col-md-4 col-lg-2-4">
-          <div className={`inv-stat-card ${colorClass}`}>
-            <div className="inv-stat-icon-wrap">
-              <Icon size={22} className="inv-stat-icon" />
+          <div className={`exp-kpi-card ${kpiClass}`}>
+            <div className="d-flex align-items-center justify-content-between">
+              <div>
+                <h6 className="text-muted mb-1 text-uppercase small fw-bold" style={{ fontSize: "0.72rem", letterSpacing: "0.05em" }}>
+                  {label}
+                </h6>
+                <h4 className="mb-0 fw-bold text-dark" style={{ letterSpacing: "-0.02em" }}>
+                  {stats?.[key]?.toLocaleString() ?? 0}
+                </h4>
+                <div className="small text-muted mt-1" style={{ fontSize: "0.7rem" }}>{hint}</div>
+              </div>
+              <div className="exp-kpi-icon-wrap">
+                <Icon size={20} />
+              </div>
             </div>
-            <div className="inv-stat-value">
-              {stats?.[key]?.toLocaleString() ?? 0}
-            </div>
-            <div className="inv-stat-label">{label}</div>
           </div>
         </div>
       ))}

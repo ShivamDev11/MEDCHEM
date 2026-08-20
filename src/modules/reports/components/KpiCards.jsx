@@ -12,47 +12,59 @@ const fmt = (n) =>
 
 const CARDS = [
   {
-    key:     'totalRevenue',
-    label:   'Total Revenue',
-    prefix:  '₹',
-    icon:    FiDollarSign,
-    color:   'success',
-    source:  'sales',
+    key:    'totalRevenue',
+    label:  'Total Revenue',
+    prefix: '₹',
+    icon:   FiDollarSign,
+    accent: 'success',
+    iconBg: 'bg-success-soft',
+    iconCl: '#10b981',
+    source: 'sales',
   },
   {
-    key:     'totalSales',
-    label:   'Total Sales',
-    icon:    FiShoppingCart,
-    color:   'primary',
-    source:  'sales',
+    key:    'totalSales',
+    label:  'Total Sales',
+    icon:   FiShoppingCart,
+    accent: 'primary',
+    iconBg: 'bg-primary-soft',
+    iconCl: '#3b82f6',
+    source: 'sales',
   },
   {
-    key:     'totalItemsSold',
-    label:   'Items Sold',
-    icon:    FiPackage,
-    color:   'info',
-    source:  'sales',
+    key:    'totalItemsSold',
+    label:  'Items Sold',
+    icon:   FiPackage,
+    accent: 'info',
+    iconBg: 'bg-info-soft',
+    iconCl: '#06b6d4',
+    source: 'sales',
   },
   {
-    key:     'totalMedicines',
-    label:   'Total Medicines',
-    icon:    FiBox,
-    color:   'secondary',
-    source:  'inventory',
+    key:    'totalMedicines',
+    label:  'Total Medicines',
+    icon:   FiBox,
+    accent: 'secondary',
+    iconBg: 'bg-secondary-soft',
+    iconCl: '#6b7280',
+    source: 'inventory',
   },
   {
-    key:     'lowStock',
-    label:   'Low Stock',
-    icon:    FiAlertTriangle,
-    color:   'warning',
-    source:  'inventory',
+    key:    'lowStock',
+    label:  'Low Stock',
+    icon:   FiAlertTriangle,
+    accent: 'warning',
+    iconBg: 'bg-warning-soft',
+    iconCl: '#f59e0b',
+    source: 'inventory',
   },
   {
-    key:     'expired',
-    label:   'Expired',
-    icon:    FiXCircle,
-    color:   'danger',
-    source:  'expiry',
+    key:    'expired',
+    label:  'Expired',
+    icon:   FiXCircle,
+    accent: 'danger',
+    iconBg: 'bg-danger-soft',
+    iconCl: '#ef4444',
+    source: 'expiry',
   },
 ];
 
@@ -73,25 +85,19 @@ function KpiCards({ salesKPIs, inventoryKPIs, expiryKPIs, loading }) {
 
         return (
           <div key={card.key} className="col-6 col-md-4 col-lg-2">
-            <div className={`card border-0 shadow-sm h-100 border-start border-4 border-${card.color}`}>
-              <div className="card-body p-3">
-                <div className="d-flex justify-content-between align-items-start">
-                  <div>
-                    <p className="text-muted small mb-1" style={{ fontSize: '0.75rem' }}>
-                      {card.label}
-                    </p>
-                    <h5 className="fw-bold mb-0">
-                      {loading ? (
-                        <span className="placeholder col-6 rounded" />
-                      ) : (
-                        `${card.prefix || ''}${fmt(value)}`
-                      )}
-                    </h5>
-                  </div>
-                  <div className={`text-${card.color} opacity-75`}>
-                    <Icon size={22} />
-                  </div>
+            <div className={`rp-kpi-card accent-${card.accent}`}>
+              <div className="d-flex justify-content-between align-items-start">
+                <p className="rp-kpi-label mb-0">{card.label}</p>
+                <div className={`rp-kpi-icon-wrap ${card.iconBg}`}>
+                  <Icon size={17} style={{ color: card.iconCl }} />
                 </div>
+              </div>
+              <div className="rp-kpi-value mt-2">
+                {loading ? (
+                  <span className="placeholder rounded" style={{ width: '70%', height: '1.5rem' }} />
+                ) : (
+                  `${card.prefix || ''}${fmt(value)}`
+                )}
               </div>
             </div>
           </div>

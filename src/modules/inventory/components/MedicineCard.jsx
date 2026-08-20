@@ -108,8 +108,8 @@ function MedicineCard({
     <div className="card inv-medicine-card border-0 shadow-sm h-100 overflow-hidden">
       {/* ── Top Header Bar ── */}
       <div className="card-header bg-white border-0 pt-3 pb-0 d-flex justify-content-between align-items-start">
-        <span className="badge bg-light text-dark border d-flex align-items-center gap-1">
-          <FiFolder size={12} />
+        <span className="inv-cat-badge d-flex align-items-center gap-1">
+          <FiFolder size={11} />
           {category}
         </span>
         <span className={`badge ${badgeClass} inv-status-badge`}>
@@ -188,39 +188,40 @@ function MedicineCard({
           <div className="col-4">
             <button
               type="button"
-              className="btn btn-outline-secondary w-100 btn-sm d-flex align-items-center justify-content-center gap-1"
+              className="btn inv-btn-icon inv-btn-view w-100 d-flex align-items-center justify-content-center gap-1"
+              style={{ width: "auto", height: "auto", padding: "0.35rem 0" }}
               onClick={() => onViewDetails(id)}
               disabled={isLoading}
               aria-label={`View details of ${medicineName}`}
             >
-              <FiEye size={14} />
-              <span>Details</span>
+              <FiEye size={13} />
+              <span style={{ fontSize: "0.78rem" }}>Details</span>
             </button>
           </div>
-          {/* Edit */}
           <div className="col-4">
             <button
               type="button"
-              className="btn btn-outline-primary w-100 btn-sm d-flex align-items-center justify-content-center gap-1"
+              className="btn inv-btn-icon inv-btn-edit w-100 d-flex align-items-center justify-content-center gap-1"
+              style={{ width: "auto", height: "auto", padding: "0.35rem 0" }}
               onClick={() => onEdit(id)}
               disabled={isLoading}
               aria-label={`Edit ${medicineName}`}
             >
-              <FiEdit size={14} />
-              <span>Edit</span>
+              <FiEdit size={13} />
+              <span style={{ fontSize: "0.78rem" }}>Edit</span>
             </button>
           </div>
-          {/* Delete */}
           <div className="col-4">
             <button
               type="button"
-              className="btn btn-outline-danger w-100 btn-sm d-flex align-items-center justify-content-center gap-1"
+              className="btn inv-btn-icon inv-btn-delete w-100 d-flex align-items-center justify-content-center gap-1"
+              style={{ width: "auto", height: "auto", padding: "0.35rem 0" }}
               onClick={() => onDelete(id)}
               disabled={isLoading}
               aria-label={`Delete ${medicineName}`}
             >
-              <FiTrash2 size={14} />
-              <span>Delete</span>
+              <FiTrash2 size={13} />
+              <span style={{ fontSize: "0.78rem" }}>Delete</span>
             </button>
           </div>
         </div>

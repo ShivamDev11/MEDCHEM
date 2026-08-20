@@ -25,23 +25,23 @@ import InventoryHeader from "../../inventory/components/InventoryHeader";
 import NotificationList from "../components/NotificationList";
 import { playError, playNotification } from "../../../shared/services/audioService";
 
-import "../../inventory/inventory.css";
+import "../notifications.css";
 
 // ── Tabs Config ──────────────────────────────────────────────────────────────
 const TABS = [
-  { value: "ALL", label: "All" },
-  { value: "UNREAD", label: "Unread" },
-  { value: NOTIFICATION_TYPES.LOW_STOCK, label: "Low Stock" },
-  { value: NOTIFICATION_TYPES.EXPIRY, label: "Expiry" },
-  { value: NOTIFICATION_TYPES.SALE, label: "Sale" },
+  { value: "ALL", label: "All Alert Logs" },
+  { value: "UNREAD", label: "Unread Alert Logs" },
+  { value: NOTIFICATION_TYPES.LOW_STOCK, label: "Low Stock alerts" },
+  { value: NOTIFICATION_TYPES.EXPIRY, label: "Expiry warnings" },
+  { value: NOTIFICATION_TYPES.SALE, label: "Sales transactions" },
 ];
 
 function Notifications() {
   // ── States ─────────────────────────────────────────────────────────────────
   const [notifications, setNotifications] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [activeTab, setActiveTab] = useState("ALL");
-  const [isMarkingAll, setIsMarkingAll] = useState(false);
+  const [loading, setLoading]             = useState(true);
+  const [activeTab, setActiveTab]         = useState("ALL");
+  const [isMarkingAll, setIsMarkingAll]   = useState(false);
 
   // ── Data Fetch ─────────────────────────────────────────────────────────────
   const fetchNotifications = useCallback(async () => {
@@ -125,27 +125,27 @@ function Notifications() {
   const breadcrumbs = useMemo(() => [{ label: "Notifications" }], []);
 
   return (
-    <div className="container-fluid py-4 inv-page-container">
+    <div className="container-fluid py-4 notif-page-animate">
       <InventoryHeader
         title="Notifications Center"
-        subtitle="Stay updated with low stock alerts, expiry warnings, and sale events."
+        subtitle="Manage warehouse system updates, low stock item alerts, and product expiry logs."
         breadcrumbs={breadcrumbs}
       />
 
       <div className="row">
-        <div className="col-12 col-lg-10 mx-auto">
+        <div className="col-12 col-xl-9 mx-auto">
           {/* Header Row: Title, Badges, Mark All Read */}
           <div className="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-3">
-            <div className="d-flex align-items-center gap-3">
-              <h2 className="h4 fw-bold mb-0 d-flex align-items-center gap-2">
+            <div className="d-flex align-items-center gap-2 flex-wrap">
+              <h2 className="h5 fw-bold mb-0 text-dark d-flex align-items-center gap-2" style={{ letterSpacing: "-0.03em" }}>
                 <FiBell className="text-primary" />
-                Your Notifications
+                Alert logs
               </h2>
-              <span className="badge bg-primary rounded-pill">
+              <span className="badge bg-primary-subtle text-primary border border-primary-subtle rounded-pill px-2.5 py-1 fw-bold" style={{ fontSize: "0.75rem" }}>
                 {notifications.length} Total
               </span>
               {unreadCount > 0 && (
-                <span className="badge bg-danger rounded-pill">
+                <span className="badge bg-danger-subtle text-danger border border-danger-subtle rounded-pill px-2.5 py-1 fw-bold animate-pulse" style={{ fontSize: "0.75rem" }}>
                   {unreadCount} Unread
                 </span>
               )}
@@ -153,33 +153,34 @@ function Notifications() {
             
             <button
               type="button"
-              className="btn btn-outline-primary d-flex align-items-center gap-2"
+              className="btn inv-btn-primary d-flex align-items-center gap-2"
+              style={{ fontSize: "0.85rem", padding: "0.45rem 1rem" }}
               onClick={handleMarkAllRead}
               disabled={loading || unreadCount === 0 || isMarkingAll}
             >
               {isMarkingAll ? (
-                <span className="spinner-border spinner-border-sm" role="status"></span>
+                <span className="spinner-border spinner-border-sm" role="status" style={{ width: "12px", height: "12px" }}></span>
               ) : (
-                <FiCheckCircle size={18} />
+                <FiCheckCircle size={15} />
               )}
-              Mark All as Read
+              <span>Mark All as Read</span>
             </button>
           </div>
 
-          {/* Filter Tabs */}
-          <div className="mb-4 d-flex flex-wrap gap-2">
-            {TABS.map((tab) => (
-              <button
-                key={tab.value}
-                type="button"
-                className={`btn btn-sm ${
-                  activeTab === tab.value ? "btn-primary" : "btn-outline-primary"
-                }`}
-                onClick={() => setActiveTab(tab.value)}
-              >
-                {tab.label}
-              </button>
-            ))}
+          {/* Filter Tabs Group */}
+          <div className="mb-4">
+            <div className="notif-tab-group shadow-sm flex-wrap">
+              {TABS.map((tab) => (
+                <button
+                  key={tab.value}
+                  type="button"
+                  className={`notif-tab-btn ${activeTab === tab.value ? "active" : ""}`}
+                  onClick={() => setActiveTab(tab.value)}
+                >
+                  {tab.label}
+                </button>
+              ))}
+            </div>
           </div>
 
           {/* List */}

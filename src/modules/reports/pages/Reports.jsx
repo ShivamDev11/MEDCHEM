@@ -27,6 +27,9 @@ import {
   exportPaymentReport,
 } from '../utils/csvExport';
 
+const fmtNum = (n) =>
+  new Intl.NumberFormat('en-IN', { maximumFractionDigits: 2 }).format(n || 0);
+
 function Reports() {
   const [dateRange, setDateRange] = useState(buildInitialRange());
 
@@ -75,7 +78,7 @@ function Reports() {
   if (error) {
     return (
       <div className="container py-5">
-        <div className="alert alert-danger d-flex align-items-center justify-content-between">
+        <div className="alert alert-danger d-flex align-items-center justify-content-between rounded-3">
           <span>⚠️ {error}</span>
           <button className="btn btn-sm btn-outline-danger" onClick={refresh}>
             <FiRefreshCw className="me-1" /> Retry
@@ -89,32 +92,30 @@ function Reports() {
     <div className="container-fluid py-4 px-3 px-md-4 reports-page">
 
       {/* ── Page Header ──────────────────────────────────────────────────── */}
-      <div className="d-flex flex-wrap justify-content-between align-items-start mb-4 gap-2">
+      <div className="d-flex flex-wrap justify-content-between align-items-start mb-4 gap-3">
         <div>
-          <h1 className="h4 fw-bold mb-0">Reports & Analytics</h1>
-          <p className="text-muted small mb-0">
-            Pharmacy performance overview · Data ready for Power BI export
-          </p>
+          <h1 className="reports-page-title">Reports &amp; Analytics</h1>
+          <p className="reports-page-sub">Pharmacy performance overview · Data ready for CSV export</p>
         </div>
 
         {/* Export Dropdown */}
         <div className="dropdown">
           <button
-            className="btn btn-outline-secondary btn-sm dropdown-toggle reports-export-btn d-flex align-items-center gap-1"
+            className="rp-export-btn dropdown-toggle"
             type="button"
             data-bs-toggle="dropdown"
             disabled={loading}
           >
             <FiDownload size={14} /> Export CSV
           </button>
-          <ul className="dropdown-menu dropdown-menu-end shadow-sm">
+          <ul className="dropdown-menu dropdown-menu-end shadow-sm" style={{ borderRadius: '12px', border: '1px solid rgba(0,0,0,0.07)', fontSize: '0.82rem' }}>
             <li>
-              <button className="dropdown-item small" onClick={() => handleExport('topMedicines')}>
+              <button className="dropdown-item" onClick={() => handleExport('topMedicines')}>
                 Top Medicines
               </button>
             </li>
             <li>
-              <button className="dropdown-item small" onClick={() => handleExport('payment')}>
+              <button className="dropdown-item" onClick={() => handleExport('payment')}>
                 Payment Methods
               </button>
             </li>
@@ -140,22 +141,15 @@ function Reports() {
       {!loading && salesKPIs && (
         <div className="row g-3 mb-4">
           {[
-            { label: "Today's Sales",   value: salesKPIs.todaySalesCount,    prefix: '' },
-            { label: "Today's Revenue", value: salesKPIs.todayRevenue,       prefix: '₹' },
-            { label: 'Monthly Revenue', value: salesKPIs.monthRevenue,        prefix: '₹' },
-            { label: 'Avg Sale Value',  value: salesKPIs.avgSaleValue,        prefix: '₹' },
+            { label: "Today's Sales",   value: salesKPIs.todaySalesCount, prefix: '' },
+            { label: "Today's Revenue", value: salesKPIs.todayRevenue,    prefix: '₹' },
+            { label: 'Monthly Revenue', value: salesKPIs.monthRevenue,    prefix: '₹' },
+            { label: 'Avg Sale Value',  value: salesKPIs.avgSaleValue,    prefix: '₹' },
           ].map((item) => (
             <div key={item.label} className="col-6 col-md-3">
-              <div className="card border-0 shadow-sm">
-                <div className="card-body p-3">
-                  <p className="text-muted small mb-1" style={{ fontSize: '0.75rem' }}>
-                    {item.label}
-                  </p>
-                  <h6 className="fw-bold mb-0">
-                    {item.prefix}
-                    {new Intl.NumberFormat('en-IN', { maximumFractionDigits: 2 }).format(item.value || 0)}
-                  </h6>
-                </div>
+              <div className="rp-detail-card">
+                <p className="rp-detail-label">{item.label}</p>
+                <p className="rp-detail-value">{item.prefix}{fmtNum(item.value)}</p>
               </div>
             </div>
           ))}
@@ -165,7 +159,7 @@ function Reports() {
       <SalesTrendChart salesTrend={salesTrend} loading={loading} />
 
       {/* ── Top Medicines + Payment Method ────────────────────────────────── */}
-      <p className="reports-section-label">Product & Payment Analysis</p>
+      <p className="reports-section-label">Product &amp; Payment Analysis</p>
       <div className="row g-4 mb-2">
         <div className="col-12 col-lg-7">
           <TopMedicinesTable topMedicines={topMedicines} loading={loading} />
@@ -182,21 +176,14 @@ function Reports() {
       {!loading && inventoryKPIs && (
         <div className="row g-3 mb-4">
           {[
-            { label: 'Total Stock Units', value: inventoryKPIs.totalStock,    prefix: '' },
-            { label: 'Out of Stock',      value: inventoryKPIs.outOfStock,    prefix: '' },
+            { label: 'Total Stock Units', value: inventoryKPIs.totalStock,     prefix: '' },
+            { label: 'Out of Stock',      value: inventoryKPIs.outOfStock,     prefix: '' },
             { label: 'Inventory Value',   value: inventoryKPIs.inventoryValue, prefix: '₹' },
           ].map((item) => (
             <div key={item.label} className="col-6 col-md-4">
-              <div className="card border-0 shadow-sm">
-                <div className="card-body p-3">
-                  <p className="text-muted small mb-1" style={{ fontSize: '0.75rem' }}>
-                    {item.label}
-                  </p>
-                  <h6 className="fw-bold mb-0">
-                    {item.prefix}
-                    {new Intl.NumberFormat('en-IN', { maximumFractionDigits: 2 }).format(item.value || 0)}
-                  </h6>
-                </div>
+              <div className="rp-detail-card">
+                <p className="rp-detail-label">{item.label}</p>
+                <p className="rp-detail-value">{item.prefix}{fmtNum(item.value)}</p>
               </div>
             </div>
           ))}

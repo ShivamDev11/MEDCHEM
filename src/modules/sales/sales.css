@@ -1,0 +1,352 @@
+/* ── Sales Design System variables ────────────────────────────────────────── */
+:root {
+  --sales-primary:        #0ea5e9;
+  --sales-primary-dark:   #0284c7;
+  --sales-primary-light:  #e0f2fe;
+  --sales-success:        #10b981;
+  --sales-success-dark:   #059669;
+  --sales-success-light:  #d1fae5;
+  --sales-warning:        #f97316;
+  --sales-warning-light:  #ffedd5;
+  --sales-danger:         #ef4444;
+  --sales-danger-light:   #fee2e2;
+  --sales-surface:        #ffffff;
+  --sales-bg:             #f0f4f8;
+  --sales-border:         #e2e8f0;
+  --sales-border-light:   #f1f5f9;
+  --sales-text:           #0f172a;
+  --sales-text-secondary: #64748b;
+  --sales-radius:         16px;
+  --sales-radius-md:      12px;
+  --sales-radius-sm:      8px;
+  --sales-shadow-sm:      0 1px 3px rgba(0,0,0,0.05), 0 1px 2px rgba(0,0,0,0.03);
+  --sales-shadow:         0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.02);
+  --sales-shadow-hover:   0 20px 25px -5px rgba(14, 165, 233, 0.08), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  --sales-transition:     all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ── Entrance Animation ───────────────────────────────────────────────────── */
+@keyframes sales-fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.sales-page-animate {
+  animation: sales-fade-in-up 0.4s ease both;
+}
+
+/* ── Header tab button groups ── */
+.sales-tab-group {
+  background: rgba(15, 23, 42, 0.05);
+  padding: 4px;
+  border-radius: var(--sales-radius-sm);
+  display: inline-flex;
+}
+
+.sales-tab-btn {
+  border: none;
+  background: transparent;
+  color: var(--sales-text-secondary);
+  font-weight: 600;
+  font-size: 0.875rem;
+  padding: 0.45rem 1.1rem;
+  border-radius: 6px;
+  transition: var(--sales-transition);
+  cursor: pointer;
+}
+
+.sales-tab-btn:hover {
+  color: var(--sales-text);
+}
+
+.sales-tab-btn.active {
+  background-color: var(--sales-surface);
+  color: var(--sales-primary-dark);
+  box-shadow: var(--sales-shadow-sm);
+}
+
+/* ── KPI Cards ── */
+.sales-kpi-card {
+  background: var(--sales-surface);
+  border-radius: var(--sales-radius-md);
+  padding: 1.25rem;
+  box-shadow: var(--sales-shadow-sm);
+  border: 1px solid var(--sales-border-light);
+  transition: var(--sales-transition);
+  min-height: 96px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.sales-kpi-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; bottom: 0;
+  width: 4px;
+}
+
+.sales-kpi-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--sales-shadow);
+}
+
+.sales-kpi-icon-wrap {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--sales-radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+/* KPI themes */
+.sales-kpi-blue::before              { background: #3b82f6; }
+.sales-kpi-blue .sales-kpi-icon-wrap { background: #eff6ff; color: #3b82f6; }
+
+.sales-kpi-green::before              { background: #10b981; }
+.sales-kpi-green .sales-kpi-icon-wrap { background: #ecfdf5; color: #10b981; }
+
+.sales-kpi-info::before              { background: #06b6d4; }
+.sales-kpi-info .sales-kpi-icon-wrap { background: #ecfeff; color: #06b6d4; }
+
+.sales-kpi-orange::before              { background: #f97316; }
+.sales-kpi-orange .sales-kpi-icon-wrap { background: #fff7ed; color: #f97316; }
+
+.sales-kpi-red::before              { background: #ef4444; }
+.sales-kpi-red .sales-kpi-icon-wrap { background: #fef2f2; color: #ef4444; }
+
+/* ── Modern POS Search Input ── */
+.sales-search-wrapper {
+  border-radius: var(--sales-radius-md);
+  border: 1px solid var(--sales-border);
+  box-shadow: var(--sales-shadow-sm);
+}
+
+.sales-search-input-group {
+  border: 1.5px solid var(--sales-border);
+  border-radius: var(--sales-radius-sm);
+  overflow: hidden;
+  transition: var(--sales-transition);
+  background: var(--sales-border-light);
+}
+
+.sales-search-input-group:focus-within {
+  border-color: var(--sales-primary);
+  box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.12);
+  background: var(--sales-surface);
+}
+
+.sales-search-addon {
+  background: transparent;
+  border: none;
+  color: var(--sales-text-secondary);
+}
+
+.sales-search-input-group:focus-within .sales-search-addon {
+  color: var(--sales-primary);
+}
+
+.sales-search-input {
+  border: none !important;
+  box-shadow: none !important;
+  background: transparent !important;
+  font-size: 0.95rem;
+}
+
+.sales-search-dropdown {
+  background: var(--sales-surface);
+  border-radius: var(--sales-radius-sm);
+  border: 1px solid var(--sales-border);
+  box-shadow: var(--sales-shadow);
+  z-index: 1000;
+  max-height: 320px;
+  overflow-y: auto;
+}
+
+.sales-search-dropdown-item {
+  transition: var(--sales-transition);
+  border-bottom: 1px solid var(--sales-border-light);
+}
+
+.sales-search-dropdown-item:last-child {
+  border-bottom: none;
+}
+
+/* ── POS Cart Table ── */
+.sales-cart-card {
+  border-radius: var(--sales-radius-md);
+  border: 1px solid var(--sales-border);
+  box-shadow: var(--sales-shadow-sm);
+  overflow: hidden;
+}
+
+.sales-cart-table th {
+  background-color: var(--sales-border-light);
+  border-bottom: 2px solid var(--sales-border);
+  padding: 0.85rem 1rem;
+  font-size: 0.72rem;
+  letter-spacing: 0.05em;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--sales-text-secondary);
+}
+
+.sales-cart-table td {
+  padding: 0.85rem 1rem;
+  border-bottom: 1px solid var(--sales-border-light);
+}
+
+.sales-cart-table tr:last-child td {
+  border-bottom: none;
+}
+
+/* Compact quantity controls */
+.sales-qty-group {
+  border: 1.5px solid var(--sales-border);
+  border-radius: var(--sales-radius-sm);
+  overflow: hidden;
+  width: 110px;
+  display: inline-flex;
+}
+
+.sales-qty-btn {
+  border: none;
+  background-color: var(--sales-border-light);
+  color: var(--sales-text);
+  font-weight: bold;
+  font-size: 0.85rem;
+  width: 30px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: var(--sales-transition);
+}
+
+.sales-qty-btn:hover:not(:disabled) {
+  background-color: #cbd5e1;
+}
+
+.sales-qty-input {
+  border: none !important;
+  border-left: 1.5px solid var(--sales-border) !important;
+  border-right: 1.5px solid var(--sales-border) !important;
+  text-align: center;
+  font-size: 0.85rem;
+  font-weight: 700;
+  width: 50px;
+  height: 28px;
+  background: transparent;
+  padding: 0;
+  box-shadow: none !important;
+}
+
+.sales-btn-delete {
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--sales-radius-sm);
+  background-color: var(--sales-danger-light);
+  border: 1px solid rgba(239, 68, 68, 0.15);
+  color: var(--sales-danger);
+  transition: var(--lay-transition);
+}
+
+.sales-btn-delete:hover {
+  background-color: var(--sales-danger);
+  color: #ffffff;
+}
+
+/* ── Checkout & Totals Summary ── */
+.sales-checkout-card {
+  border-radius: var(--sales-radius-md);
+  border: 1px solid var(--sales-border);
+  box-shadow: var(--sales-shadow-sm);
+}
+
+.sales-summary-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.75rem;
+}
+
+.sales-summary-row:last-of-type {
+  margin-bottom: 0;
+}
+
+.sales-summary-label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--sales-text-secondary);
+}
+
+.sales-summary-val {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--sales-text);
+}
+
+.sales-summary-divider {
+  border-top: 1px dashed var(--sales-border);
+  margin: 1rem 0;
+}
+
+/* ── Sales History ── */
+.sales-history-card {
+  border-radius: var(--sales-radius-md);
+  border: 1px solid var(--sales-border);
+  box-shadow: var(--sales-shadow-sm);
+}
+
+.sales-history-table th {
+  background-color: var(--sales-border-light);
+  border-bottom: 2px solid var(--sales-border);
+  padding: 0.85rem 1rem;
+  font-size: 0.72rem;
+  letter-spacing: 0.05em;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--sales-text-secondary);
+}
+
+.sales-history-table td {
+  padding: 0.85rem 1rem;
+  border-bottom: 1px solid var(--sales-border-light);
+}
+
+.sales-history-table tr:last-child td {
+  border-bottom: none;
+}
+
+/* ── Printable Invoice ── */
+.invoice-print-header {
+  border-bottom: 2px solid var(--sales-primary);
+  padding-bottom: 1.5rem;
+}
+
+.invoice-table-header th {
+  background-color: var(--sales-border-light) !important;
+  color: var(--sales-text) !important;
+  font-weight: 700 !important;
+}
+
+.invoice-signature-line {
+  border-top: 1px solid var(--sales-text);
+  width: 180px;
+  margin: 3.5rem auto 0;
+  padding-top: 0.5rem;
+}

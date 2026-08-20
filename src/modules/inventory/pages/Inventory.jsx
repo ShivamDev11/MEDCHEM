@@ -173,20 +173,20 @@ function Inventory() {
   
   // Render: Error Alert Panel
   const errorPanel = error && (
-    <div className="alert inv-alert-error d-flex align-items-center justify-content-between p-4 mb-4 shadow-sm" role="alert">
-      <div className="d-flex align-items-center gap-2">
-        <FiAlertCircle size={24} className="text-danger flex-shrink-0" />
+    <div className="inv-alert-error d-flex align-items-center justify-content-between p-4 mb-4" role="alert">
+      <div className="d-flex align-items-center gap-3">
+        <FiAlertCircle size={22} className="text-danger flex-shrink-0" />
         <div>
-          <h5 className="alert-heading fw-bold mb-1">Failed to Load Inventory</h5>
-          <p className="mb-0 small">{error}</p>
+          <h5 className="fw-bold mb-1" style={{ fontSize: "0.95rem" }}>Failed to Load Inventory</h5>
+          <p className="mb-0 small text-secondary">{error}</p>
         </div>
       </div>
       <button 
         type="button" 
-        className="btn btn-outline-danger d-flex align-items-center gap-1"
+        className="btn btn-sm inv-btn-retry d-flex align-items-center gap-1"
         onClick={handleReload}
       >
-        <FiRefreshCw size={14} />
+        <FiRefreshCw size={13} />
         Retry
       </button>
     </div>
@@ -196,11 +196,9 @@ function Inventory() {
   const bodyContent = useMemo(() => {
     if (loading && medicines.length === 0) {
       return (
-        <div className="inv-spinner-wrap text-center py-5">
-          <div className="spinner-border text-primary" role="status">
-            <span className="visually-hidden">Loading Inventory...</span>
-          </div>
-          <p className="text-muted mt-2 small">Loading inventory list...</p>
+        <div className="inv-spinner-wrap">
+          <div className="inv-brand-spinner" role="status" aria-label="Loading inventory" />
+          <p className="text-muted small mb-0">Loading inventory list…</p>
         </div>
       );
     }
@@ -209,17 +207,19 @@ function Inventory() {
       return (
         <div className="inv-empty-state text-center p-5 card border-0 shadow-sm">
           <div className="py-4">
-            <FiAlertCircle size={48} className="text-muted mb-3" />
-            <h4 className="fw-bold text-dark">No Medicine Records</h4>
-            <p className="text-muted mb-4 max-w-md mx-auto">
-              Your pharmacy database does not contain any medicines yet, or they have all been deleted. Add a new medicine record to get started.
+            <div className="inv-empty-icon-wrap">
+              <FiAlertCircle size={28} />
+            </div>
+            <h4 className="fw-bold text-dark mb-2">No Medicine Records</h4>
+            <p className="text-muted mb-4" style={{ maxWidth: "400px", margin: "0 auto 1.5rem" }}>
+              Your pharmacy database does not contain any medicines yet. Add a new record to get started.
             </p>
             <button
               type="button"
               className="btn inv-btn-primary d-inline-flex align-items-center gap-2"
               onClick={() => navigate("/inventory/add")}
             >
-              <FiPlus size={18} />
+              <FiPlus size={16} />
               Add First Medicine
             </button>
           </div>
