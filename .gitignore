@@ -1,5 +1,19 @@
-node_modules
-dist
+# Python
+venv/
+.venv/
+__pycache__/
+*.py[cod]
+
+# Environment
 .env
-.env.local
-.vscode
+
+# Node
+node_modules/
+
+# Build
+dist/
+build/
+
+# IDE
+.vscode/
+.idea/
