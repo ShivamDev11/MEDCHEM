@@ -31,6 +31,7 @@ import {
   FORM_DEFAULT_VALUES,
   TOAST_MESSAGES,
 } from "../constants/inventoryConstants";
+import { getSuppliers } from "../../smartOperations/services/supplierService";
 
 // ─────────────────────────────────────────────────────────────────────────────
 // VALIDATION ENGINE
@@ -143,6 +144,25 @@ function MedicineForm({
   const [errors,         setErrors]         = useState({});
   const [isSubmitting,   setIsSubmitting]   = useState(false);
   const [submitAttempted, setSubmitAttempted] = useState(false);
+
+  const [suppliers, setSuppliers] = useState([]);
+  const [isLoadingSuppliers, setIsLoadingSuppliers] = useState(true);
+
+  useEffect(() => {
+    let isMounted = true;
+    const fetchSuppliers = async () => {
+      try {
+        const data = await getSuppliers();
+        if (isMounted) setSuppliers(data);
+      } catch (err) {
+        console.error("Failed to fetch suppliers:", err);
+      } finally {
+        if (isMounted) setIsLoadingSuppliers(false);
+      }
+    };
+    fetchSuppliers();
+    return () => { isMounted = false; };
+  }, []);
 
   useEffect(() => {
     if (initialValues) {
@@ -292,18 +312,26 @@ function MedicineForm({
             <label htmlFor="inv-f-supplier" className="inv-form-label">
               Supplier <span className="inv-required">*</span>
             </label>
-            <input
+            <select
               id="inv-f-supplier"
               name="supplier"
-              type="text"
-              className={`form-control inv-form-control ${errors.supplier ? "inv-input-error" : ""}`}
+              className={`form-select inv-form-control ${errors.supplier ? "inv-input-error" : ""}`}
               value={values.supplier}
               onChange={handleChange}
-              disabled={isSubmitting}
-              placeholder="e.g. Apollo Distributor"
-              autoComplete="off"
+              disabled={isSubmitting || isLoadingSuppliers}
               aria-required="true"
-            />
+            >
+              <option value="">— Select Supplier —</option>
+              {isLoadingSuppliers ? (
+                 <option value="" disabled>Loading suppliers...</option>
+              ) : suppliers.length === 0 ? (
+                 <option value="" disabled>No suppliers available. Please add a supplier first.</option>
+              ) : (
+                 suppliers.map((s) => (
+                   <option key={s.id} value={s.name}>{s.name}</option>
+                 ))
+              )}
+            </select>
             <FieldError message={errors.supplier} />
           </div>
         </div>

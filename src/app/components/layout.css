@@ -53,9 +53,9 @@
 
 /* ── Notification Bell Badge Pulse ── */
 @keyframes lay-pulse-badge {
-  0% { transform: translate(100%, -50%) scale(1); }
-  50% { transform: translate(100%, -50%) scale(1.2); }
-  100% { transform: translate(100%, -50%) scale(1); }
+  0% { transform: translate(-50%, -50%) scale(1); }
+  50% { transform: translate(-50%, -50%) scale(1.2); }
+  100% { transform: translate(-50%, -50%) scale(1); }
 }
 
 .lay-badge-notify {

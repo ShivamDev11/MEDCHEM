@@ -9,6 +9,7 @@ import Reports       from "../modules/reports/pages/Reports";
 
 import ProtectedRoute from "../modules/auth/routes/ProtectedRoute";
 import inventoryRoutes from "../modules/inventory/inventoryRoutes";
+import smartOpsRoutes from "../modules/smartOperations/smartOpsRoutes";
 import useAuth from "../modules/auth/hooks/useAuth";
 import { AUTH_ROUTES } from "../modules/auth/constants/authConstants";
 
@@ -64,6 +65,7 @@ const router = createBrowserRouter([
         path: "/reports",
         element: <Reports />,
       },
+      ...smartOpsRoutes,
     ],
   },
 ]);

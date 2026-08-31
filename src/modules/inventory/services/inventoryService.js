@@ -418,6 +418,41 @@ export const getInventoryStats = async () => {
 
 
 // ═════════════════════════════════════════════════════════════════════════════
+// getDashboardInventoryData
+// ─────────────────────────────────────────────────────────────────────────────
+// Single Firestore read that returns KPI counts AND medicine lists for the
+// Dashboard. Avoids the composite index required by getExpiringMedicines()
+// by filtering expiryDate client-side (same string-comparison logic).
+// ═════════════════════════════════════════════════════════════════════════════
+export const getDashboardInventoryData = async () => {
+  const q = query(
+    medicinesRef,
+    where("status", "==", MEDICINE_STATUS.ACTIVE)
+  );
+  const snapshot  = await getDocs(q);
+  const medicines = snapshot.docs.map(mapDoc);
+
+  const todayStr     = getTodayString();
+  const thresholdStr = getExpiryThreshold(EXPIRY_WARNING_DAYS);
+
+  const outOfStockList = medicines.filter(m => Number(m.quantity) === 0);
+  const lowStockList   = medicines.filter(
+    m => Number(m.quantity) > 0 && Number(m.quantity) <= Number(m.minimumStock)
+  );
+  const expiringSoonList = medicines
+    .filter(m => m.expiryDate >= todayStr && m.expiryDate <= thresholdStr)
+    .sort((a, b) => a.expiryDate.localeCompare(b.expiryDate));
+
+  return {
+    totalMedicines:  medicines.length,
+    outOfStockList,
+    lowStockList,
+    expiringSoonList,
+  };
+};
+
+
+// ═════════════════════════════════════════════════════════════════════════════
 // 9. getLowStockMedicines
 // ─────────────────────────────────────────────────────────────────────────────
 // Returns all ACTIVE medicines where stock is critically low:

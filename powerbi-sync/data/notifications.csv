@@ -1,0 +1,53 @@
+isRead,batchNumber,timestamp,message,medicineId,type,id
+True,SPT-TAB-21,2026-08-04 15:38:34.512000+00:00,Septilin Tablet (Batch: SPT-TAB-21) expires in 75 days.,FSyaZQpAcrBvNyfXyLkR,EXPIRY,05mX1STCGOg1wsLKqnlO
+True,LST-MNT-25,2026-08-04 15:38:33.958000+00:00,Listerine Cool Mint Mouthwash 250ml (Batch: LST-MNT-25) expires in 18 days.,nmTG4PvemU3j77920c4T,EXPIRY,2IgXY6fTsuzHzNr2PitV
+True,BEC-Z-441,2026-08-04 15:38:33.655000+00:00,Becosules Z Capsule (Batch: BEC-Z-441) has EXPIRED 34 days ago.,p1gh0mOZntLuq0PiSBjc,EXPIRY,2idjsixPTIpyWOAcvWtX
+True,BND-SYP-11,2026-08-04 15:38:33.436000+00:00,Benadryl Cough Syrup 100ml (Batch: BND-SYP-11) has EXPIRED 66 days ago.,gniLA1ftbr6e0OG354u3,EXPIRY,2jm1OFaZNX23vSFPg68r
+True,ZBX-INJ-02,2026-08-05 14:09:09.632000+00:00,Low stock alert for Zebexid 200mg Injection. Only 2 remaining.,E4rumlDzKtSYI9VN125O,LOW_STOCK,58wYNsBVBnbG5fC6unAc
+True,NTG-SPF-50,2026-08-05 14:09:21.761000+00:00,Low stock alert for Neutrogena Ultra Sheer Dry-Touch Sunblock SPF 50+. Only 5 remaining.,dzfhQVdRkQG5U3q8eF98,LOW_STOCK,6GlxImQ2dM33eFDAHFEq
+True,ACU-ACT-10,2026-08-05 14:09:03.749000+00:00,Low stock alert for Accu-Chek Active Blood Glucose Monitor Kit. Only 4 remaining.,74F2NGXe1MEHhsTtAaOu,LOW_STOCK,6IcdsiQhCOfPh4fbFRZx
+True,ASC-LS-99,2026-08-04 15:38:34.059000+00:00,Ascoril LS Syrup 100ml (Batch: ASC-LS-99) expires in 24 days.,LZU72VvqUPv9daeGSN4r,EXPIRY,6JjFsMQXyYQA23WBvz3p
+True,CPX-EYE-88,2026-08-05 14:09:10.976000+00:00,Low stock alert for Ciplox 0.3% Eye Drops 10ml. Only 5 remaining.,I7XCnmUDI88AtecXBRpl,LOW_STOCK,6MozRR1lxc6Rq3Gu3C8z
+True,PRV-13-901,2026-08-04 15:38:34.641000+00:00,Prevenar 13 Vaccine 0.5ml (Batch: PRV-13-901) expires in 85 days.,e7sybvQsYvfKLRLA3b4r,EXPIRY,7dXaEBtOaOpmBCDFKGkz
+True,HIM-PWD-20,2026-08-05 14:09:20.764000+00:00,Low stock alert for Himalaya Baby Powder 200g. Only 4 remaining.,Wicn862xNGraQDrkKLUU,LOW_STOCK,7pTR7qSd08rZtW9roiRB
+True,MOV-CRM-50,2026-08-04 15:38:34.276000+00:00,Moov Pain Relief Specialist Cream 50g (Batch: MOV-CRM-50) expires in 49 days.,gASlGPAsBuxwjQVjZ6nI,EXPIRY,8bH8IvqRx5pD0HOrv3SQ
+True,SKN-LTE-45,2026-08-04 15:38:34.110000+00:00,Skinlite Cream 25g (Batch: SKN-LTE-45) expires in 32 days.,8DXIUW9pdsjz0gzvRk9f,EXPIRY,9vFgdNJsOOsfWZnIHTEi
+True,EVN-400-19,2026-08-04 15:38:33.557000+00:00,Evion 400 Capsule (Batch: EVN-400-19) has EXPIRED 40 days ago.,qaFUuHcV2hQf4LlkfVhf,EXPIRY,BebPeMjIR0tePWKoy8rs
+True,BND-SYP-11,2026-08-05 14:09:23.757000+00:00,Low stock alert for Benadryl Cough Syrup 100ml. Only 3 remaining.,gniLA1ftbr6e0OG354u3,LOW_STOCK,DLhnn03E9wZungkvAq6o
+True,DL2026-A1,2026-08-05 14:09:29.909000+00:00,Low stock alert for Dolo 650mg Tablet. Only 5 remaining.,zcrxKnlMF3aHMaOXoUdZ,LOW_STOCK,DZS9itq1eFYwvidg9MdY
+True,QDR-RF-33,2026-08-04 15:38:34.248000+00:00,Quadriderm RF Cream 10g (Batch: QDR-RF-33) expires in 45 days.,jadTy3w92TFvmJzKDdEe,EXPIRY,Fhdij6hSQrV70aEDvQ0U
+True,SBM-FAC-50,2026-08-05 14:09:11.771000+00:00,Low stock alert for Sebamed Baby Protective Facial Cream 50ml. Only 3 remaining.,KzNQkwqcGK2tAVmvYL4W,LOW_STOCK,HaMlCgQ4OFJD2gl08oZv
+True,TBD-EYE-05,2026-08-05 14:09:02.818000+00:00,Low stock alert for Tobradex Eye Drops 5ml. Only 4 remaining.,0GiNLuR3gRSDwxWmXeue,LOW_STOCK,IPlurKdoo0FPfRq8xvcf
+True,SLV-DCG-12,2026-08-04 15:38:33.742000+00:00,Solvin Decongestant Syrup 60ml (Batch: SLV-DCG-12) has EXPIRED 20 days ago.,8kX7QIrR3NBa8G0eCwdF,EXPIRY,JioCZS0UK79vjrFIqCSM
+True,HND-SHP-99,2026-08-04 15:38:34.594000+00:00,Head & Shoulders Anti-Dandruff Shampoo 180ml (Batch: HND-SHP-99) expires in 82 days.,hXvn2ryh6AL5rb5ZhMSy,EXPIRY,M3nXqMf2QISsFjX7cI4O
+True,PRT-ORG-40,2026-08-04 15:38:34.010000+00:00,Protinex Original High Protein Powder 400g (Batch: PRT-ORG-40) expires in 22 days.,OJfb6BSqZRlSuO5r5iwW,EXPIRY,MEOmMdbTvmFPjiy8dT6s
+True,CPX-EYE-88,2026-08-04 15:38:33.776000+00:00,Ciplox 0.3% Eye Drops 10ml (Batch: CPX-EYE-88) has EXPIRED 15 days ago.,I7XCnmUDI88AtecXBRpl,EXPIRY,O3NAOP5YxBFl5IX8cLtm
+True,CRX-DX-100,2026-08-04 15:38:33.826000+00:00,Corex DX Cough Syrup 100ml (Batch: CRX-DX-100) expires in 8 days.,QKL7NEuPltFoRkRRisxW,EXPIRY,Pv32JoEQzslgmEzVBbIr
+True,VLN-GEL-40,2026-08-04 15:38:34.084000+00:00,Volini Gel 30g (Batch: VLN-GEL-40) expires in 26 days.,7jX6CrBAEs5XV5wkd6AE,EXPIRY,TyHd2jVPR0Y7CQvxahFc
+True,CRX-DX-100,2026-08-05 14:09:19.761000+00:00,Low stock alert for Corex DX Cough Syrup 100ml. Only 7 remaining.,QKL7NEuPltFoRkRRisxW,LOW_STOCK,UYiVrFdG0ljLliNJWYxI
+True,NIV-SFT-33,2026-08-04 15:38:34.333000+00:00,Nivea Soft Light Moisturizer 100ml (Batch: NIV-SFT-33) expires in 57 days.,36zDst2XzvqmRLrLw8u0,EXPIRY,XRw6wobqf08zy1A1Pos5
+True,SLV-DCG-12,2026-08-05 14:09:05.823000+00:00,Low stock alert for Solvin Decongestant Syrup 60ml. Only 6 remaining.,8kX7QIrR3NBa8G0eCwdF,LOW_STOCK,YW6G6L0ayPnD3BDcCCDb
+True,LST-MNT-25,2026-08-05 14:09:24.761000+00:00,Low stock alert for Listerine Cool Mint Mouthwash 250ml. Only 6 remaining.,nmTG4PvemU3j77920c4T,LOW_STOCK,YuOroDeNo6I1eq1g5d1T
+True,NIV-DEO-50,2026-08-05 14:09:26.941000+00:00,Low stock alert for Nivea Fresh Active Deodorant Roll-On 50ml. Only 2 remaining.,pdCpkaTVslEhlw1jwxgU,LOW_STOCK,Z3ByovbU0YGrJsLXzyPN
+True,BRR-OX-300,2026-08-05 14:09:06.754000+00:00,Low stock alert for Beurer PO30 Fingertip Pulse Oximeter. Only 3 remaining.,CjW6w59T7IgBuD5BoL6I,LOW_STOCK,ZcC7mVd3mvEfbfC0JSIC
+True,AZ-500-09,2026-08-05 14:09:28.890000+00:00,Low stock alert for Azithral 500 Tablet. Only 8 remaining.,upvc7yDGghK1jkCWz8SL,LOW_STOCK,aGNPZqmt9afqoaTmKE8i
+True,PRV-13-901,2026-08-05 14:09:22.758000+00:00,Low stock alert for Prevenar 13 Vaccine 0.5ml. Only 3 remaining.,e7sybvQsYvfKLRLA3b4r,LOW_STOCK,cAlEkwKBDCKhvMROSL63
+True,PAN-ALK-03,2026-08-05 14:09:26.001000+00:00,Low stock alert for Pan 40 Tablet. Only 4 remaining.,ooleGH4kWqkuSifJVjHq,LOW_STOCK,fFwBM1yiY4ZgJqf0N2xy
+True,ZNT-150-00,2026-08-04 15:38:33.394000+00:00,Zinetac 150mg Tablet (Batch: ZNT-150-00) has EXPIRED 116 days ago.,V0l99fS3bp6loyCAYfDN,EXPIRY,fehmyTXWHMuUsT7NnwNd
+True,AUG-625-X,2026-08-04 15:38:34.207000+00:00,Augmentin 625 Duo Tablet (Batch: AUG-625-X) expires in 42 days.,8QStFWQ3sgV3BJYS1epH,EXPIRY,jjRhzbHMJblwD0pD3WfD
+True,DL2026-A1,2026-08-04 15:38:33.492000+00:00,Dolo 650mg Tablet (Batch: DL2026-A1) has EXPIRED 50 days ago.,zcrxKnlMF3aHMaOXoUdZ,EXPIRY,kMuaIhTitEY8lopaorCe
+True,TXM-O200-8,2026-08-04 15:38:34.144000+00:00,Taxim O 200 Tablet (Batch: TXM-O200-8) expires in 37 days.,1QoF3gFZmViIoKpAgMDr,EXPIRY,lUKoVYR7xxPkbVniIxsB
+True,SKN-LTE-45,2026-08-05 14:09:04.766000+00:00,Low stock alert for Skinlite Cream 25g. Only 9 remaining.,8DXIUW9pdsjz0gzvRk9f,LOW_STOCK,oMQef3gQLNKKiEElhPJt
+True,NIV-DEO-50,2026-08-04 15:38:33.613000+00:00,Nivea Fresh Active Deodorant Roll-On 50ml (Batch: NIV-DEO-50) has EXPIRED 35 days ago.,pdCpkaTVslEhlw1jwxgU,EXPIRY,p3kyZx3tpYDq1EoxC8TV
+True,HRL-CL-500,2026-08-04 15:38:34.407000+00:00,Horlicks Classic Malt Health Drink 500g (Batch: HRL-CL-500) expires in 69 days.,LeP85rywBcjufM4Sb6F2,EXPIRY,pQBOAStA1UpFEXmLwFUS
+True,ZOC-150-77,2026-08-05 14:09:07.999000+00:00,Low stock alert for Zocon 150 Tablet. Only 6 remaining.,DDtbY8MEufZZTrMhYKty,LOW_STOCK,rZXqQCjvEyKormSZZNFI
+True,DGN-GEL-88,2026-08-04 15:38:34.377000+00:00,Digene Acidity Relief Gel 200ml (Batch: DGN-GEL-88) expires in 65 days.,bgP5WUltdlvc43seO2Qn,EXPIRY,tddbviLQvVcvlOih1eLW
+True,MNC-1G-55,2026-08-04 15:38:34.560000+00:00,Monocef 1g Injection (Batch: MNC-1G-55) expires in 77 days.,In7MYkOGMZ0BCtCv6CKy,EXPIRY,w4aaNZIP5fwYO3WDQCeo
+True,JNJ-LTN-20,2026-08-04 15:38:34.175000+00:00,Johnson's Baby Lotion 200ml (Batch: JNJ-LTN-20) expires in 39 days.,oRQUcOaroEiPTpLic7yI,EXPIRY,wJlXxos4pjWE3QdCi82m
+True,ALG-120-04,2026-08-04 15:38:34.308000+00:00,Allegra 120mg Tablet (Batch: ALG-120-04) expires in 52 days.,sCHO0zpLRNawvL6xNQst,EXPIRY,wWGlJU2cgF5SYNrFelgy
+True,AZ-500-09,2026-08-04 15:38:34.464000+00:00,Azithral 500 Tablet (Batch: AZ-500-09) expires in 72 days.,upvc7yDGghK1jkCWz8SL,EXPIRY,x69QyYjve6yrIX9RoD8J
+True,PAN-ALK-03,2026-08-04 15:38:33.906000+00:00,Pan 40 Tablet (Batch: PAN-ALK-03) expires in 16 days.,ooleGH4kWqkuSifJVjHq,EXPIRY,xFCdu5KFXGnOUHFNpezT
+True,HIM-PWD-20,2026-08-04 15:38:33.708000+00:00,Himalaya Baby Powder 200g (Batch: HIM-PWD-20) has EXPIRED 30 days ago.,Wicn862xNGraQDrkKLUU,EXPIRY,xriH67T5IykTsGjqmbz3
+True,EVN-400-19,2026-08-05 14:09:27.898000+00:00,Low stock alert for Evion 400 Capsule. Only 10 remaining.,qaFUuHcV2hQf4LlkfVhf,LOW_STOCK,yLA4MIvJVZNFmPZsXiuA
+True,CR2026-B2,2026-08-04 15:38:33.852000+00:00,Crocin Advance 500mg Tablet (Batch: CR2026-B2) expires in 11 days.,GV70OUptMu3VbHk0lH8t,EXPIRY,yxLBi1oJmta6r1j7UmLK
+True,PRT-ORG-40,2026-08-05 14:09:18.325000+00:00,Low stock alert for Protinex Original High Protein Powder 400g. Only 5 remaining.,OJfb6BSqZRlSuO5r5iwW,LOW_STOCK,zTh4Go96mGR56o0SKJaw

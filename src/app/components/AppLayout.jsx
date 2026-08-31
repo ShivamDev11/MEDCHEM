@@ -211,6 +211,30 @@ function AppLayout() {
             >
               Sales
             </span>
+
+            {/* Operations Dropdown */}
+            <div className="nav-item dropdown position-relative">
+              <span
+                className={`nav-link lay-nav-link dropdown-toggle ${(
+                  isActive("/suppliers") || isActive("/purchases") || 
+                  isActive("/reorder") || isActive("/profit-analysis") || 
+                  isActive("/stock-history")
+                ) ? "lay-active" : ""}`}
+                role="button"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+              >
+                Operations
+              </span>
+              <ul className="dropdown-menu dropdown-menu-custom mt-2" style={{ border: 'none', minWidth: '200px' }}>
+                <li><span className="dropdown-item-custom d-block fw-semibold" style={{cursor:'pointer'}} onClick={() => navigate("/suppliers")}>Suppliers</span></li>
+                <li><span className="dropdown-item-custom d-block fw-semibold" style={{cursor:'pointer'}} onClick={() => navigate("/purchases")}>Purchases</span></li>
+                <li><span className="dropdown-item-custom d-block fw-semibold" style={{cursor:'pointer'}} onClick={() => navigate("/reorder")}>Reorder Suggestions</span></li>
+                <li><span className="dropdown-item-custom d-block fw-semibold" style={{cursor:'pointer'}} onClick={() => navigate("/profit-analysis")}>Profit Analysis</span></li>
+                <li><span className="dropdown-item-custom d-block fw-semibold" style={{cursor:'pointer'}} onClick={() => navigate("/stock-history")}>Stock History</span></li>
+              </ul>
+            </div>
+
             <span
               onClick={() => navigate("/expiry")}
               className={`nav-link lay-nav-link ${isActive("/expiry") ? "lay-active" : ""}`}
