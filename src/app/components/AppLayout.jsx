@@ -34,6 +34,7 @@ import {
 } from "../../modules/notifications/services/notificationService";
 import { playNotification, playError } from "../../../src/shared/services/audioService";
 import { NOTIFICATION_TYPES, SALES_COLLECTIONS } from "../../modules/sales/constants/salesConstants";
+import AIChatbot from "../../modules/ai/components/AIChatbot";
 import "./layout.css";
 
 // ── Time Helpers ─────────────────────────────────────────────────────────────
@@ -377,6 +378,9 @@ function AppLayout() {
       <main className="flex-grow-1">
         <Outlet />
       </main>
+
+      {/* ── Module 8: AI Assistant Chatbot ──────────────────────────────── */}
+      <AIChatbot />
     </div>
   );
 }
