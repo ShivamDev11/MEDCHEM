@@ -62,12 +62,13 @@ function AIChatbot() {
       timestamp: new Date().toISOString(),
     };
 
-    setMessages((prev) => [...prev, userMessage]);
+    const updatedHistory = [...messages, userMessage];
+    setMessages(updatedHistory);
     setInputValue("");
     setIsLoading(true);
 
     try {
-      const aiResponse = await askMedChemAssistant(query, messages);
+      const aiResponse = await askMedChemAssistant(query, updatedHistory);
 
       const botMessage = {
         id: `bot-${Date.now()}`,

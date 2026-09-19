@@ -4,7 +4,7 @@ import { toast } from "react-toastify";
 import { FaEye, FaEyeSlash, FaSignInAlt } from "react-icons/fa";
 
 import { loginWithEmail } from "../services/authService";
-import { playLogin, playError } from "../../../shared/services/audioService";
+import { playWelcome, playError } from "../../../shared/services/audioService";
 import { AUTH_ROUTES, AUTH_ERRORS, AUTH_MESSAGES, AUTH_VALIDATION } from "../constants/authConstants";
 
 const LoginForm = () => {
@@ -39,8 +39,11 @@ const LoginForm = () => {
     try {
       await loginWithEmail(email, password);
       
-      // Play sound on successful login
-      playLogin();
+      // Clear dashboard snapshot so fresh login establishes baseline without premature update sound
+      sessionStorage.removeItem("medchem_dashboard_snapshot");
+
+      // Play welcome sound on successful login
+      playWelcome();
       
       toast.success(AUTH_MESSAGES.LOGIN_SUCCESS);
       navigate(AUTH_ROUTES.DASHBOARD);

@@ -7,5 +7,6 @@ export const loginWithEmail = async (email, password) => {
 };
 
 export const logoutUser = async () => {
+  sessionStorage.removeItem("medchem_dashboard_snapshot");
   await signOut(auth);
 };

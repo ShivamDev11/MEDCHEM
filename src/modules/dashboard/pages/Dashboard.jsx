@@ -6,6 +6,7 @@ import {
   FiCalendar, FiRefreshCw, FiChevronRight,
 } from "react-icons/fi";
 
+import { toast } from "react-toastify";
 import { playDashboard } from "../../../shared/services/audioService";
 import { getDashboardInventoryData } from "../../inventory/services/inventoryService";
 import { getSalesHistory } from "../../sales/services/salesService";
@@ -80,6 +81,20 @@ function SectionHeader({ title, action, onAction }) {
   );
 }
 
+// ── Dashboard Data Snapshot (for genuine change detection) ───────────────────
+const computeDashboardSnapshot = (invData, salesData, notifsData) => {
+  if (!invData && !salesData && !notifsData) return "";
+
+  const totalMeds = invData?.totalMedicines ?? 0;
+  const lowStock = (invData?.lowStockList || []).map((m) => `${m.id}:${m.quantity}`).join(";");
+  const outOfStock = (invData?.outOfStockList || []).map((m) => m.id).join(";");
+  const expiringSoon = (invData?.expiringSoonList || []).map((m) => `${m.id}:${m.expiryDate}`).join(";");
+  const salesSummary = (salesData || []).map((s) => `${s.id}:${s.netAmount}:${s.status}`).join(";");
+  const notifsSummary = (notifsData || []).map((n) => `${n.id}:${n.isRead}`).join(";");
+
+  return `${totalMeds}|${lowStock}|${outOfStock}|${expiringSoon}|${salesSummary}|${notifsSummary}`;
+};
+
 // ── Main Component ────────────────────────────────────────────────────────────
 function Dashboard() {
   const navigate = useNavigate();
@@ -95,7 +110,7 @@ function Dashboard() {
   }).format(new Date());
 
   // Single parallel load — 3 Firestore reads total
-  const loadData = useCallback(async () => {
+  const loadData = useCallback(async (isManualRefresh = false) => {
     setLoading(true);
     setError(null);
     try {
@@ -107,6 +122,23 @@ function Dashboard() {
       setInv(invData);
       setSales(salesData);
       setNotifs(notifsData);
+
+      // Verify whether dashboard data genuinely changed compared to the last snapshot
+      const currentSnapshot = computeDashboardSnapshot(invData, salesData, notifsData);
+      const previousSnapshot = sessionStorage.getItem("medchem_dashboard_snapshot");
+
+      if (previousSnapshot === null) {
+        // Initial load / login: record baseline silently (no "Dashboard updated" sound)
+        sessionStorage.setItem("medchem_dashboard_snapshot", currentSnapshot);
+      } else if (previousSnapshot !== currentSnapshot) {
+        // Data has actually changed! Announce update and show toast
+        sessionStorage.setItem("medchem_dashboard_snapshot", currentSnapshot);
+        playDashboard();
+        toast.info("Dashboard updated with latest data");
+      } else if (isManualRefresh) {
+        // Manual refresh clicked, but data is already current
+        toast.info("Dashboard is already up to date");
+      }
     } catch (err) {
       console.error("Dashboard load error:", err);
       setError("Could not load dashboard data. Please try again.");
@@ -116,7 +148,7 @@ function Dashboard() {
   }, []);
 
   useEffect(() => {
-    playDashboard();
+    // Load data on mount without unconditionally playing dashboard sound
     loadData();
   }, [loadData]);
 
@@ -181,7 +213,7 @@ function Dashboard() {
                 </div>
                 <button
                   className="btn btn-sm btn-outline-light dash-refresh-btn"
-                  onClick={loadData}
+                  onClick={() => loadData(true)}
                   title="Refresh"
                 >
                   <FiRefreshCw size={14} />
