@@ -2,13 +2,13 @@
  * @file        csvExport.js
  * @module      Reports
  * @purpose     Reusable CSV export utility.
- *              One function handles all report exports — no library needed.
- *              Data is structured for clean Power BI consumption in Module 6.
+ *              Converts flat records into structured, downloadable CSVs.
+ *              Compatible with Power BI dataset ingestion.
  */
 
 // ─────────────────────────────────────────────────────────────────────────────
 // exportToCSV
-// Converts an array of flat objects to a CSV file and triggers download.
+// Converts an array of flat objects to a CSV file and triggers browser download.
 //
 // @param {string}   filename - File name without extension (e.g. 'sales_report')
 // @param {object[]} rows     - Array of flat objects (each key = column header)
@@ -45,7 +45,6 @@ export const exportToCSV = (filename, rows) => {
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Data mappers — shape raw report data into clean Power BI-ready rows.
-// Each mapper returns a flat array of objects with consistent field names.
 // ─────────────────────────────────────────────────────────────────────────────
 
 export const exportSalesReport = (sales) => {
@@ -60,6 +59,7 @@ export const exportSalesReport = (sales) => {
     tax:           s.tax || 0,
     netAmount:     s.netAmount || 0,
     totalItems:    s.totalItems || 0,
+    status:        s.status || 'Completed',
   }));
   exportToCSV('sales_report', rows);
 };
@@ -71,12 +71,13 @@ export const exportInventoryReport = (medicines) => {
     genericName:   m.genericName || '',
     category:      m.category || '',
     manufacturer:  m.manufacturer || '',
+    supplier:      m.supplier || '',
     batchNumber:   m.batchNumber || '',
     expiryDate:    m.expiryDate || '',
     currentStock:  m.quantity || 0,
     minimumStock:  m.minimumStock || 0,
-    sellingPrice:  m.sellingPrice || 0,
     purchasePrice: m.purchasePrice || 0,
+    sellingPrice:  m.sellingPrice || 0,
   }));
   exportToCSV('inventory_report', rows);
 };
@@ -99,12 +100,16 @@ export const exportExpiryReport = (medicines) => {
 
 export const exportTopMedicines = (topMedicines) => {
   const rows = topMedicines.map((m, i) => ({
-    rank:         i + 1,
-    medicineName: m.medicineName || '',
-    quantitySold: m.quantitySold || 0,
-    revenue:      m.revenue || 0,
+    rank:          i + 1,
+    medicineName:  m.medicineName || '',
+    category:      m.category || '',
+    quantitySold:  m.quantitySold || 0,
+    revenue:       m.revenue || 0,
+    grossProfit:   m.profit || 0,
+    profitMargin:  `${(m.margin || 0).toFixed(1)}%`,
+    currentStock:  m.currentStock || 0,
   }));
-  exportToCSV('top_medicines', rows);
+  exportToCSV('top_medicines_report', rows);
 };
 
 export const exportPaymentReport = (paymentMethods) => {
@@ -112,6 +117,46 @@ export const exportPaymentReport = (paymentMethods) => {
     paymentMethod:      method,
     transactionCount:   data.count || 0,
     totalRevenue:       data.revenue || 0,
+    revenuePercentage:  `${data.revenuePct || 0}%`,
   }));
   exportToCSV('payment_methods_report', rows);
+};
+
+export const exportPurchasesReport = (purchases) => {
+  const rows = purchases.map((p) => ({
+    purchaseId:   p.id || '',
+    orderDate:    p.createdAt ? new Date(p.createdAt).toLocaleDateString('en-IN') : '',
+    supplierName: p.supplierName || '',
+    totalAmount:  p.totalAmount || 0,
+    status:       p.status || 'Completed',
+    notes:        p.notes || '',
+  }));
+  exportToCSV('purchases_report', rows);
+};
+
+export const exportSuppliersReport = (suppliers) => {
+  const rows = suppliers.map((s) => ({
+    supplierId:         s.id || '',
+    name:               s.name || '',
+    contactNumber:      s.contactNumber || '',
+    email:              s.email || '',
+    totalPurchaseValue: s.totalPurchaseValue || 0,
+    purchaseCount:      s.purchaseCount || 0,
+    catalogProducts:    s.productCount || 0,
+  }));
+  exportToCSV('supplier_analytics_report', rows);
+};
+
+export const exportProfitReport = (profitSummary) => {
+  if (!profitSummary || !profitSummary.byProduct) return;
+  const rows = profitSummary.byProduct.map((p) => ({
+    medicineName:  p.medicineName,
+    category:      p.category,
+    unitsSold:     p.unitsSold,
+    revenue:       p.revenue,
+    costOfGoods:   p.cost,
+    grossProfit:   p.profit,
+    profitMargin:  `${(p.margin || 0).toFixed(1)}%`,
+  }));
+  exportToCSV('profit_margin_report', rows);
 };
