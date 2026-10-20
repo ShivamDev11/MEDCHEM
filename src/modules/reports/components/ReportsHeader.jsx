@@ -5,7 +5,6 @@
  *              last refreshed timestamp, data refresh trigger, and export options.
  */
 
-import React from 'react';
 import { FiDownload, FiRefreshCw, FiClock, FiPrinter } from 'react-icons/fi';
 
 const ReportsHeader = ({

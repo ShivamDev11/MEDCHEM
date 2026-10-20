@@ -6,14 +6,12 @@
  *              Each card is clickable to open drill-through records in the detail drawer.
  */
 
-import React from 'react';
 import {
   FiDollarSign,
   FiShoppingCart,
   FiPackage,
   FiTrendingUp,
   FiPercent,
-  FiShoppingBag,
   FiBox,
   FiLayers,
   FiAlertTriangle,

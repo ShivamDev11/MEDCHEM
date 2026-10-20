@@ -7,7 +7,7 @@
  *              rich visualizations, KPI metrics, drill-through drawers, and exports.
  */
 
-import React, { useCallback } from 'react';
+import { useCallback } from 'react';
 import { toast } from 'react-toastify';
 import { FiRefreshCw, FiAlertTriangle } from 'react-icons/fi';
 
@@ -72,7 +72,6 @@ function Reports() {
 
   // ── 2. Data fetching & calculations hook ──────────────────────────────────
   const {
-    allSales,
     allMedicines,
     allPurchases,
     allSuppliers,

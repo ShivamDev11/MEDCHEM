@@ -5,7 +5,7 @@
  *              category filter, supplier filter, payment method filter, and medicine search.
  */
 
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { FiCalendar, FiSearch, FiRotateCcw } from 'react-icons/fi';
 import { DATE_FILTERS, PAYMENT_METHODS } from '../constants/reportsConstants';
 import { MEDICINE_CATEGORIES } from '../../inventory/constants/inventoryConstants';

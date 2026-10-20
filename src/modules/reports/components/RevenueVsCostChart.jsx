@@ -5,7 +5,6 @@
  *              over the selected time period.
  */
 
-import React from 'react';
 import {
   ResponsiveContainer,
   AreaChart,

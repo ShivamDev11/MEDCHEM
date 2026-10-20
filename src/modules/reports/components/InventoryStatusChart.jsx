@@ -5,7 +5,6 @@
  *              Low Stock, Out of Stock, and Expired.
  */
 
-import React from 'react';
 import {
   ResponsiveContainer,
   PieChart,

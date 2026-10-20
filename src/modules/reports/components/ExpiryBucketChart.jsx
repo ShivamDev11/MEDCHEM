@@ -5,7 +5,6 @@
  *              medicines in each expiry risk window, with click-to-drill functionality.
  */
 
-import React from 'react';
 import {
   ResponsiveContainer,
   BarChart,

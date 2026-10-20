@@ -5,7 +5,7 @@
  *              Supports toggling Top 5 / 10 / 20 and ranking by Quantity Sold or Revenue.
  */
 
-import React, { useState } from 'react';
+import { useState } from 'react';
 import {
   ResponsiveContainer,
   BarChart,

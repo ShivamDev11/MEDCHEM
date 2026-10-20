@@ -5,7 +5,6 @@
  *              profit margin %, category-wise profit contribution, and product margin table.
  */
 
-import React from 'react';
 import {
   ResponsiveContainer,
   BarChart,
@@ -16,7 +15,7 @@ import {
   Tooltip,
   Cell,
 } from 'recharts';
-import { FiTrendingUp, FiAlertTriangle, FiInfo } from 'react-icons/fi';
+import { FiTrendingUp, FiInfo } from 'react-icons/fi';
 import { CHART_PALETTE } from '../constants/reportsConstants';
 
 const fmt = (n) =>

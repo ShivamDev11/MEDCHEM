@@ -5,7 +5,7 @@
  *              per category. Clicking a category bar applies a global/cross-filter.
  */
 
-import React, { useState } from 'react';
+import { useState } from 'react';
 import {
   ResponsiveContainer,
   BarChart,
@@ -22,7 +22,7 @@ import { CHART_PALETTE } from '../constants/reportsConstants';
 const fmt = (n) =>
   new Intl.NumberFormat('en-IN', { maximumFractionDigits: 0 }).format(n || 0);
 
-const CustomTooltip = ({ active, payload, label }) => {
+const CustomTooltip = ({ active, payload }) => {
   if (active && payload && payload.length) {
     const data = payload[0].payload;
     return (

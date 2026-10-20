@@ -5,7 +5,6 @@
  *              with remove buttons and a "Reset All" action.
  */
 
-import React from 'react';
 import { FiX, FiFilter } from 'react-icons/fi';
 
 const FilterChips = ({

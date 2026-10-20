@@ -4,8 +4,6 @@
  * @purpose     Reusable section header with title, subtitle, icon, badge, and optional action link.
  */
 
-import React from 'react';
-
 const SectionHeader = ({
   title,
   subtitle,

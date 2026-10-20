@@ -5,8 +5,8 @@
  *              for sales, inventory, low-stock, expiry, purchases, and profit metrics.
  */
 
-import React, { useState, useEffect } from 'react';
-import { FiX, FiArrowLeft, FiAlertTriangle, FiCheckCircle } from 'react-icons/fi';
+import { useState } from 'react';
+import { FiArrowLeft, FiAlertTriangle } from 'react-icons/fi';
 import { DRAWER_MODES } from '../constants/reportsConstants';
 import ReportsDataTable from './ReportsDataTable';
 import { getSaleItems } from '../../sales/services/salesService';
@@ -28,13 +28,11 @@ const ReportDetailDrawer = ({
   const [saleItems, setSaleItems]         = useState([]);
   const [loadingItems, setLoadingItems]   = useState(false);
 
-  // Reset drill-level state when drawer closes or mode changes
-  useEffect(() => {
-    if (!drawer.open) {
-      setActiveSale(null);
-      setSaleItems([]);
-    }
-  }, [drawer.open, drawer.mode]);
+  const handleClose = () => {
+    setActiveSale(null);
+    setSaleItems([]);
+    closeDrawer();
+  };
 
   // When a sale is clicked to inspect items
   const handleSaleClick = async (sale) => {
@@ -410,7 +408,7 @@ const ReportDetailDrawer = ({
       <div
         className="modal-backdrop fade show"
         style={{ zIndex: 1045 }}
-        onClick={closeDrawer}
+        onClick={handleClose}
       />
 
       {/* Offcanvas Drawer */}
@@ -430,7 +428,7 @@ const ReportDetailDrawer = ({
             type="button"
             className="btn-close text-reset"
             aria-label="Close"
-            onClick={closeDrawer}
+            onClick={handleClose}
           />
         </div>
         <div className="offcanvas-body">

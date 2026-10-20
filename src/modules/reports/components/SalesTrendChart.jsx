@@ -6,7 +6,6 @@
  *              and drill-through to the sales detail drawer.
  */
 
-import React from 'react';
 import {
   ResponsiveContainer,
   AreaChart,

@@ -5,7 +5,6 @@
  *              Powered by Recharts PieChart. Supports clicking slices to cross-filter sales.
  */
 
-import React from 'react';
 import {
   ResponsiveContainer,
   PieChart,

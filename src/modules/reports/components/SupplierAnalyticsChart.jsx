@@ -5,7 +5,6 @@
  *              bar chart showing top suppliers by purchase volume and click-to-filter.
  */
 
-import React from 'react';
 import {
   ResponsiveContainer,
   BarChart,
